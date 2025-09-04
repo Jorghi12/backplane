@@ -4,10 +4,16 @@ import { SubmitButton } from '../(dashboard)/pricing/submit-button';
 import { Building2, Mail, User, Cloud, MessageSquareText } from 'lucide-react';
 
 export const metadata = {
-  title: 'Contact — Backplane'
+  title: 'Contact — Backplane',
 };
 
 export default function ContactPage() {
+  // Wrap the server action so the form action returns Promise<void>
+  async function submit(formData: FormData) {
+    'use server';
+    await contactAction(formData);
+  }
+
   return (
     <main className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <header className="mb-8">
@@ -23,34 +29,64 @@ export default function ContactPage() {
         </p>
       </header>
 
-      <form action={contactAction} className="rounded-xl bg-white border border-gray-200 p-6 grid gap-4">
+      <form action={submit} className="rounded-xl bg-white border border-gray-200 p-6 grid gap-4">
         <div className="grid sm:grid-cols-2 gap-4">
-          <LabeledInput name="name" label="Full name" icon={<User className="h-4 w-4" />} autoComplete="name" />
-          <LabeledInput name="email" label="Work email*" required icon={<Mail className="h-4 w-4" />} autoComplete="email" />
+          <LabeledInput
+            type="text"
+            name="name"
+            label="Full name"
+            icon={<User className="h-4 w-4" />}
+            autoComplete="name"
+          />
+          <LabeledInput
+            type="email"
+            name="email"
+            label="Work email"
+            required
+            icon={<Mail className="h-4 w-4" />}
+            autoComplete="email"
+          />
         </div>
 
         <div className="grid sm:grid-cols-2 gap-4">
-          <LabeledInput name="company" label="Company" icon={<Building2 className="h-4 w-4" />} />
-          <LabeledInput name="role" label="Role" />
+          <LabeledInput
+            type="text"
+            name="company"
+            label="Company"
+            icon={<Building2 className="h-4 w-4" />}
+          />
+          <LabeledInput type="text" name="role" label="Role" />
         </div>
 
         <div className="grid sm:grid-cols-2 gap-4">
-          <LabeledInput name="cloud" label="Cloud(s)" placeholder="AWS, GCP, Azure" icon={<Cloud className="h-4 w-4" />} />
-          <select
-            name="topic"
-            className="h-11 rounded-md border border-gray-300 px-3 text-sm text-gray-900"
-            defaultValue="demo"
-          >
-            <option value="demo">Demo</option>
-            <option value="security">Security brief</option>
-            <option value="pricing">Pricing</option>
-            <option value="partnership">Partnership</option>
-          </select>
+          <LabeledInput
+            type="text"
+            name="cloud"
+            label="Cloud(s)"
+            placeholder="AWS, GCP, Azure"
+            icon={<Cloud className="h-4 w-4" />}
+          />
+          <div>
+            <label htmlFor="topic" className="block text-sm font-medium text-gray-900">
+              Topic
+            </label>
+            <select
+              id="topic"
+              name="topic"
+              className="mt-1 h-11 w-full rounded-md border border-gray-300 px-3 text-sm text-gray-900"
+              defaultValue="demo"
+            >
+              <option value="demo">Demo</option>
+              <option value="security">Security brief</option>
+              <option value="pricing">Pricing</option>
+              <option value="partnership">Partnership</option>
+            </select>
+          </div>
         </div>
 
         <div>
           <label htmlFor="message" className="block text-sm font-medium text-gray-900">
-            Message*
+            Message <span className="text-red-600">*</span>
           </label>
           <div className="mt-1 relative">
             <textarea
@@ -77,13 +113,15 @@ export default function ContactPage() {
 }
 
 function LabeledInput({
+  type = 'text',
   name,
   label,
   required,
   autoComplete,
   placeholder,
-  icon
+  icon,
 }: {
+  type?: React.HTMLInputTypeAttribute;
   name: string;
   label: string;
   required?: boolean;
@@ -94,11 +132,13 @@ function LabeledInput({
   return (
     <div>
       <label htmlFor={name} className="block text-sm font-medium text-gray-900">
-        {label}{required ? ' *' : ''}
+        {label}
+        {required ? ' *' : ''}
       </label>
       <div className="mt-1 relative">
         <input
           id={name}
+          type={type}
           name={name}
           required={required}
           autoComplete={autoComplete}
