@@ -1,22 +1,31 @@
 'use client';
 
 import Link from 'next/link';
-import { use, useState, Suspense } from 'react';
+import { useState, Suspense } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
+import useSWR, { mutate } from 'swr';
+
 import { Button } from '@/components/ui/button';
-import { CircleIcon, Home, LogOut } from 'lucide-react';
+import {
+  CircleIcon,
+  Home,
+  LogOut,
+  Menu,
+  X,
+} from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuTrigger
+  DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { signOut } from '@/app/(login)/actions';
-import { useRouter } from 'next/navigation';
 import { User } from '@/lib/db/schema';
-import useSWR, { mutate } from 'swr';
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
+
+/* ----------------------- User menu (auth-aware) ----------------------- */
 
 function UserMenu() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -29,33 +38,41 @@ function UserMenu() {
     router.push('/');
   }
 
+  // Signed-out state: keep it simple—Sign in + primary CTA
   if (!user) {
     return (
-      <>
+      <div className="flex items-center gap-3">
         <Link
-          href="/pricing"
+          href="/sign-in"
           className="text-sm font-medium text-gray-700 hover:text-gray-900"
         >
-          Pricing
+          Sign in
         </Link>
         <Button asChild className="rounded-full">
-          <Link href="/sign-up">Sign Up</Link>
+          <Link href="/sign-up">Sign up</Link>
         </Button>
-      </>
+      </div>
     );
   }
 
+  // Compute safe initials
+  const initials =
+    (user.name &&
+      user.name
+        .trim()
+        .split(/\s+/)
+        .map((n) => n[0]?.toUpperCase())
+        .slice(0, 2)
+        .join('')) ||
+    (user.email ? user.email.slice(0, 2).toUpperCase() : 'U');
+
   return (
     <DropdownMenu open={isMenuOpen} onOpenChange={setIsMenuOpen}>
-      <DropdownMenuTrigger>
+      <DropdownMenuTrigger aria-label="Open user menu">
         <Avatar className="cursor-pointer size-9">
-          <AvatarImage alt={user.name || ''} />
-          <AvatarFallback>
-            {user.email
-              .split(' ')
-              .map((n) => n[0])
-              .join('')}
-          </AvatarFallback>
+          {/* Add src if your User has an image field */}
+          <AvatarImage alt={user.name || user.email || 'User'} />
+          <AvatarFallback className="text-xs">{initials}</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="flex flex-col gap-1">
@@ -78,29 +95,155 @@ function UserMenu() {
   );
 }
 
-function Header() {
+/* ---------------------------- Header/Nav ----------------------------- */
+
+function NavLink({
+  href,
+  children,
+  onClick,
+}: {
+  href: string;
+  children: React.ReactNode;
+  onClick?: () => void;
+}) {
+  const pathname = usePathname();
+  const active =
+    pathname === href ||
+    (href !== '/' && pathname.startsWith(href + '/'));
+
   return (
-    <header className="border-b border-gray-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+    <Link
+      href={href}
+      onClick={onClick}
+      className={[
+        'text-sm font-medium transition-colors',
+        active
+          ? 'text-gray-900'
+          : 'text-gray-700 hover:text-gray-900',
+      ].join(' ')}
+    >
+      {children}
+    </Link>
+  );
+}
+
+function Header() {
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  const primaryLinks = [
+    { href: '/docs/quickstart', label: 'Docs' },
+    { href: '/security', label: 'Security' },
+    { href: '/pricing', label: 'Pricing' },
+    { href: '/contact', label: 'Contact' },
+  ];
+
+  return (
+    <header className="sticky top-0 z-50 border-b border-gray-200 bg-white/70 backdrop-blur supports-[backdrop-filter]:bg-white/60">
+      <a
+        href="#main"
+        className="sr-only focus:not-sr-only focus:absolute focus:inset-x-0 focus:top-0 focus:z-50 focus:m-2 focus:rounded-md focus:bg-white focus:px-3 focus:py-2 focus:shadow"
+      >
+        Skip to content
+      </a>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+        {/* Brand */}
         <Link href="/" className="flex items-center">
-          <CircleIcon className="h-6 w-6 text-orange-500" />
-          <span className="ml-2 text-xl font-semibold text-gray-900">Backplane</span>
+          <CircleIcon aria-hidden className="h-6 w-6 text-orange-500" />
+          <span className="ml-2 text-xl font-semibold text-gray-900">
+            Backplane
+          </span>
         </Link>
-        <div className="flex items-center space-x-4">
-          <Suspense fallback={<div className="h-9" />}>
+
+        {/* Desktop nav */}
+        <nav className="hidden md:flex items-center gap-6" aria-label="Main">
+          {primaryLinks.map((l) => (
+            <NavLink key={l.href} href={l.href}>
+              {l.label}
+            </NavLink>
+          ))}
+          <span className="h-6 w-px bg-gray-200" />
+          <Suspense fallback={<div className="h-9 w-24" />}>
             <UserMenu />
           </Suspense>
+        </nav>
+
+        {/* Mobile controls */}
+        <div className="md:hidden flex items-center gap-3">
+          <Suspense fallback={<div className="h-9 w-24" />}>
+            <UserMenu />
+          </Suspense>
+          <button
+            type="button"
+            aria-label="Toggle menu"
+            onClick={() => setMobileOpen((o) => !o)}
+            className="inline-flex items-center justify-center rounded-md border border-gray-200 p-2 text-gray-700 hover:bg-gray-50"
+          >
+            {mobileOpen ? (
+              <X className="h-5 w-5" />
+            ) : (
+              <Menu className="h-5 w-5" />
+            )}
+          </button>
         </div>
       </div>
+
+      {/* Mobile sheet */}
+      {mobileOpen && (
+        <div className="md:hidden border-t border-gray-200 bg-white">
+          <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 grid gap-3" aria-label="Mobile">
+            {primaryLinks.map((l) => (
+              <NavLink
+                key={l.href}
+                href={l.href}
+                onClick={() => setMobileOpen(false)}
+              >
+                {l.label}
+              </NavLink>
+            ))}
+          </nav>
+        </div>
+      )}
     </header>
   );
 }
 
+/* ----------------------------- Footer ------------------------------ */
+
+function Footer() {
+  return (
+    <footer className="mt-auto border-t border-gray-200 bg-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div className="text-sm text-gray-600">
+          © {new Date().getFullYear()} Backplane, Inc. All rights reserved.
+        </div>
+        <div className="flex flex-wrap items-center gap-4 text-sm">
+          <Link href="/security" className="text-gray-700 hover:text-gray-900">
+            Security
+          </Link>
+          <Link href="/privacy" className="text-gray-700 hover:text-gray-900">
+            Privacy
+          </Link>
+          <Link href="/terms" className="text-gray-700 hover:text-gray-900">
+            Terms
+          </Link>
+          <Link href="/contact" className="text-gray-700 hover:text-gray-900">
+            Contact
+          </Link>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+/* ----------------------------- Layout ------------------------------ */
+
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <section className="flex flex-col min-h-screen">
+    <section className="flex min-h-screen flex-col">
       <Header />
-      {children}
+      <main id="main">{children}</main>
+      <Footer />
     </section>
   );
 }
