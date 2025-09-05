@@ -12,7 +12,7 @@ export default function Security() {
           Built for regulated enterprises
         </h1>
         <p className="mt-3 text-gray-600">
-          Backplane is an in‑VPC request‑path control plane. Compute and data stay in your cloud account;
+          TrustPlane is an in‑VPC request‑path control plane. Compute and data stay in your cloud account;
           we standardize policy, routing, and audit across providers.
         </p>
       </header>

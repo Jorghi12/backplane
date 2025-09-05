@@ -9,7 +9,7 @@ export default function Quickstart() {
           Quickstart
         </span>
         <h1 className="mt-4 text-3xl sm:text-4xl font-bold tracking-tight text-gray-900">
-          Get Backplane running inside your VPC
+          Get TrustPlane running inside your VPC
         </h1>
         <p className="mt-3 text-gray-600">
           30 minutes to a governed, multi‑model request path with SLOs‑as‑code and policy‑driven routing.
@@ -24,11 +24,11 @@ export default function Quickstart() {
           </div>
           <pre className="mt-3 rounded-lg bg-gray-900 text-gray-100 p-4 text-sm overflow-x-auto">
 {`# npm
-npm i @backplane/sdk
+npm i @TrustPlane/sdk
 # pnpm
-pnpm add @backplane/sdk
+pnpm add @TrustPlane/sdk
 # yarn
-yarn add @backplane/sdk`}
+yarn add @TrustPlane/sdk`}
           </pre>
         </li>
 
@@ -38,10 +38,10 @@ yarn add @backplane/sdk`}
             2) Declare an SLO Manifest
           </div>
           <p className="mt-2 text-sm text-gray-600">
-            Define latency, reliability, budget, and safety as code. Backplane enforces this at the request path.
+            Define latency, reliability, budget, and safety as code. TrustPlane enforces this at the request path.
           </p>
           <pre className="mt-3 rounded-lg bg-gray-900 text-gray-100 p-4 text-sm overflow-x-auto">
-{`# backplane.slo.yaml
+{`# TrustPlane.slo.yaml
 slo:
   latency_p50: 300ms
   reliability: "99.9%"
@@ -65,15 +65,15 @@ routing:
           <pre className="mt-3 rounded-lg bg-gray-900 text-gray-100 p-4 text-sm overflow-x-auto">
 {`// app/api/example/route.ts
 import { NextResponse } from 'next/server';
-import { createClient } from '@backplane/sdk';
+import { createClient } from '@TrustPlane/sdk';
 
 const bp = createClient({
-  sloManifestPath: 'backplane.slo.yaml'
+  sloManifestPath: 'TrustPlane.slo.yaml'
 });
 
 export async function POST() {
   const resp = await bp.chat({
-    model: 'auto',         // Backplane picks model + region + hardware
+    model: 'auto',         // TrustPlane picks model + region + hardware
     input: 'Summarize Q2 risk reports for the board',
     team: 'risk-ops',
     trace: true
@@ -106,7 +106,7 @@ export async function POST() {
             5) Deploy in your cloud(s)
           </div>
           <p className="mt-2 text-sm text-gray-600">
-            Backplane runs in your VPC (AWS/GCP/Azure). Use marketplace or Terraform modules to roll out the gateway/sidecar.
+            TrustPlane runs in your VPC (AWS/GCP/Azure). Use marketplace or Terraform modules to roll out the gateway/sidecar.
           </p>
         </li>
       </ol>

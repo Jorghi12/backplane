@@ -151,7 +151,7 @@ function Header() {
         <Link href="/" className="flex items-center">
           <CircleIcon aria-hidden className="h-6 w-6 text-orange-500" />
           <span className="ml-2 text-xl font-semibold text-gray-900">
-            Backplane
+            TrustPlane
           </span>
         </Link>
 
@@ -207,7 +207,6 @@ function Header() {
     </header>
   );
 }
-
 /* ----------------------------- Footer ------------------------------ */
 
 function Footer() {
@@ -215,7 +214,7 @@ function Footer() {
     <footer className="mt-auto border-t border-gray-200 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div className="text-sm text-gray-600">
-          © {new Date().getFullYear()} Backplane, Inc. All rights reserved.
+          © {new Date().getFullYear()} TrustPlane, Inc. All rights reserved.
         </div>
         <div className="flex flex-wrap items-center gap-4 text-sm">
           <Link href="/security" className="text-gray-700 hover:text-gray-900">

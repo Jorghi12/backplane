@@ -22,7 +22,7 @@ export async function contactAction(formData: FormData): Promise<Result> {
   const webhook = process.env.CONTACT_WEBHOOK_URL;
   if (webhook) {
     const payload = {
-      text: `New Backplane contact:
+      text: `New TrustPlane contact:
 - Name: ${name || '—'}
 - Email: ${email}
 - Company: ${company || '—'}

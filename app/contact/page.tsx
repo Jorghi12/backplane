@@ -4,7 +4,7 @@ import { SubmitButton } from '../(dashboard)/pricing/submit-button';
 import { Building2, Mail, User, Cloud, MessageSquareText } from 'lucide-react';
 
 export const metadata = {
-  title: 'Contact — Backplane',
+  title: 'Contact — TrustPlane',
 };
 
 export default function ContactPage() {
