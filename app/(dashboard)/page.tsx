@@ -30,15 +30,18 @@ export default function HomePage() {
               <span className="inline-flex items-center rounded-full bg-orange-100 px-3 py-1 text-xs font-medium text-orange-700 tracking-wide">
                 TrustPlane
               </span>
+
               <h1 className="mt-4 text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-gray-900">
-                Approve once. In production in&nbsp;<span className="text-orange-600">90 days</span>.
+                Approve once. <span className="text-orange-600">Governed canary</span> in under a week.
                 <br className="hidden sm:block" />
-                New use cases live in <span className="text-orange-600">under a week</span>.
+                Certified production in <span className="text-orange-600">≤ 90 days</span>.
               </h1>
+
               <p className="mt-5 text-lg text-gray-600 max-w-2xl">
-                TrustPlane is the <span className="font-semibold">enterprise AI agent control plane</span> that
-                <span className="font-semibold"> works with your stack</span>—Okta/Entra/Ping, Databricks, Snowflake, AWS/Azure/GCP, ServiceNow/Jira, Splunk/Datadog, Slack/Teams.
-                Approve the platform once (identity, audit, data boundaries), then ship multiple agents under the same guardrails.
+                TrustPlane is the <span className="font-semibold">enterprise AI control plane</span> that turns pilots into
+                audited production <span className="font-semibold">in your cloud</span>. Approve identity, governance, and
+                data boundaries once—then ship many agents under the same guardrails. Works with Okta/Entra/Ping,
+                Databricks, Snowflake, AWS/Azure/GCP, ServiceNow/Jira, Splunk/Datadog, and Slack/Teams.
               </p>
 
               <div className="mt-8 flex flex-wrap gap-3">
@@ -70,10 +73,10 @@ export default function HomePage() {
                   <FileCheck2 className="h-4 w-4 text-orange-600" /> Deterministic audit trails
                 </li>
                 <li className="flex items-center gap-2">
-                  <LineChart className="h-4 w-4 text-orange-600" /> SIEM/observability exports
+                  <Cloud className="h-4 w-4 text-orange-600" /> Runs in your VPC / cloud
                 </li>
                 <li className="flex items-center gap-2">
-                  <Cloud className="h-4 w-4 text-orange-600" /> Runs in your VPC / cloud
+                  <Shield className="h-4 w-4 text-orange-600" /> No training on your data by default
                 </li>
               </ul>
             </div>
@@ -104,8 +107,9 @@ guardrails:
   write_requires_approval: true
   pii: redact
 targets:
-  ttp_days: 90
-  mttr_minutes: 5`}
+  tte_days: 7         # time to evidence
+  ttp_days: 90        # pilot to production
+  mttr_minutes: 5     # safe-mode rollback`}
                 </pre>
                 <div className="px-5 py-4 border-t border-white/10">
                   <p className="text-xs font-semibold tracking-wider uppercase text-gray-400">
@@ -134,13 +138,13 @@ await cp.agent('dataprep').run({
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-2 gap-8">
           <Card title="The problem">
             Fortune‑500s don’t struggle to start pilots—they struggle to clear security, compliance,
-            and integration gates to reach production. Reviews (TPRM/InfoSec), SSO/SCIM, and app/data
-            integrations routinely add months.
+            and integration gates to reach production. TPRM/InfoSec reviews, SSO/SCIM, and app/data
+            integrations routinely add months and kill momentum.
           </Card>
           <Card title="Why now">
-            Exec teams are demanding ROI this fiscal year. TrustPlane collapses the review/integration
-            path by shipping <em>identity, governance, and connectors</em> as a reusable control plane
-            across the tools you already run.
+            Exec teams need ROI this fiscal year. TrustPlane collapses the review/integration path by
+            shipping <em>identity, governance, and connectors</em> as a reusable control plane across
+            the tools you already run—so pilots reach <em>governed canary</em> in days.
           </Card>
         </div>
       </section>
@@ -149,7 +153,7 @@ await cp.agent('dataprep').run({
       <section className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-bold text-gray-900">
-            TrustPlane: the AI agent control plane that works with your stack
+            TrustPlane: the AI control plane that works with your stack
           </h2>
           <p className="mt-4 text-lg text-gray-600 max-w-3xl">
             Approve the platform once—identity, audit, and data boundaries—then reuse it for
@@ -157,12 +161,11 @@ await cp.agent('dataprep').run({
             Okta/Entra/Ping; ServiceNow/Jira; Splunk/Datadog; Slack/Teams.
           </p>
 
-          {/* How it works */}
           <div className="mt-10 grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             <Feature
               icon={<ShieldCheck className="h-5 w-5" />}
               title="Approve‑once platform"
-              desc="Centralize platform‑level review for security, compliance, and vendor risk—reused across use cases."
+              desc="Centralize platform review for security, compliance, and vendor risk—reused across use cases."
             />
             <Feature
               icon={<KeyRound className="h-5 w-5" />}
@@ -177,7 +180,7 @@ await cp.agent('dataprep').run({
             <Feature
               icon={<LineChart className="h-5 w-5" />}
               title="Observability & SIEM"
-              desc="OpenTelemetry/Datadog exports, per‑action traces, and budget/rate guardrails."
+              desc="OpenTelemetry/Datadog exports, per‑action traces, budget/rate guardrails, and cost/showback."
             />
             <Feature
               icon={<Shield className="h-5 w-5" />}
@@ -210,9 +213,9 @@ await cp.agent('dataprep').run({
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h3 className="text-2xl font-semibold text-gray-900">Enterprise outcomes</h3>
           <div className="mt-6 grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            <Stat icon={<Activity className="h-5 w-5" />} value="≤ 90 days" label="Pilot → production" />
-            <Stat icon={<Gauge className="h-5 w-5" />} value="&lt; 7 days" label="Each new use case" />
-            <Stat icon={<Shield className="h-5 w-5" />} value="100%" label="Audit coverage (per action)" />
+            <Stat icon={<Activity className="h-5 w-5" />} value="≤ 7 days" label="Time‑to‑evidence (governed canary)" />
+            <Stat icon={<Gauge className="h-5 w-5" />} value="≤ 90 days" label="Pilot → certified production" />
+            <Stat icon={<Shield className="h-5 w-5" />} value="100%" label="Per‑action audit coverage" />
             <Stat icon={<Server className="h-5 w-5" />} value="&lt; 5 min" label="Rollback MTTR (safe‑mode)" />
           </div>
           <p className="mt-4 text-xs text-gray-500">
@@ -221,8 +224,27 @@ await cp.agent('dataprep').run({
         </div>
       </section>
 
-      {/* ROLE-BASED VALUE */}
+      {/* PILOT KITS */}
       <section className="py-16 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h3 className="text-2xl font-semibold text-gray-900">Start with a hair‑on‑fire workflow</h3>
+          <p className="mt-2 text-gray-600 max-w-3xl">
+            Opinionated “Pilot Kits” include pre‑wired connectors, evals, and guardrails—so you can launch canaries in days
+            and scale wins across LoBs.
+          </p>
+          <div className="mt-6 grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <UseCaseCard icon={<FileCheck2 className="h-5 w-5" />} title="Claims triage & severity" desc="Automate first notice, damage assessment, and routing with auditability and human‑in‑the‑loop." />
+            <UseCaseCard icon={<DollarSign className="h-5 w-5" />} title="AP / invoice matching" desc="Match, enrich, and post with deterministic write gates and rollback safeguards." />
+            <UseCaseCard icon={<LineChart className="h-5 w-5" />} title="Product attribution & tagging" desc="Tag and localize assets across DAM/CMS with per‑action lineage for eDiscovery." />
+            <UseCaseCard icon={<Shield className="h-5 w-5" />} title="KYC / AML screening" desc="Assist analysts with policy‑based approvals, retention, and audit exports to SIEM." />
+            <UseCaseCard icon={<Activity className="h-5 w-5" />} title="KPI brief from data" desc="Automate monthly executive readouts from Snowflake/Databricks—no data leaves your cloud." />
+            <UseCaseCard icon={<Users className="h-5 w-5" />} title="Customer support deflection" desc="RAG + tools with deterministic guardrails; escalate to human queues on policy triggers." />
+          </div>
+        </div>
+      </section>
+
+      {/* ROLE-BASED VALUE */}
+      <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h3 className="text-2xl font-semibold text-gray-900">Built for enterprise buyers</h3>
           <div className="mt-6 grid md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -294,8 +316,29 @@ await cp.agent('dataprep').run({
           <h3 className="text-2xl font-semibold text-gray-900">90‑day plan to production</h3>
           <div className="mt-6 grid md:grid-cols-3 gap-6">
             <StepCard step="Weeks 0–2" title="Trust & identity" desc="Stand up trust portal; SAML SSO + SCIM configured; baseline audit export." />
-            <StepCard step="Weeks 2–6" title="Connectors & governance" desc="Read‑first connectors live; RBAC/ABAC and policy packs enabled; SIEM streaming." />
-            <StepCard step="Weeks 6–12" title="Cutover & certify" desc="Approval workflows for writes; rollback/safe‑mode; production certification & runbooks." />
+            <StepCard step="Weeks 2–6" title="Connectors & governance" desc="Read‑first connectors live; RBAC/ABAC and policy packs enabled; SIEM streaming & golden sets." />
+            <StepCard step="Weeks 6–12" title="Canary → certify" desc="Approval workflows for writes; rollback/safe‑mode; production certification & runbooks." />
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ / OBJECTIONS */}
+      <section className="py-16 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h3 className="text-2xl font-semibold text-gray-900">Answers to the first four objections</h3>
+          <div className="mt-6 grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <Card title="Do you train on our data?">
+              No—<span className="font-medium">not by default</span>. Private data is isolated; model providers or open‑weights are configurable by policy.
+            </Card>
+            <Card title="Where does data live?">
+              Inside your cloud/VPC with <span className="font-medium">BYOK/KMS</span> and residency controls. Full audit export to your SIEM.
+            </Card>
+            <Card title="Are we locked in?">
+              Vendor‑neutral routing and standard connectors. Swap models/tools without redoing governance.
+            </Card>
+            <Card title="Security posture?">
+              SOC 2 program, DPIA/LLM risk docs, SSO/SCIM, RBAC/ABAC, and deterministic per‑action lineage for eDiscovery.
+            </Card>
           </div>
         </div>
       </section>
@@ -305,7 +348,7 @@ await cp.agent('dataprep').run({
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
           <div>
             <h4 className="text-2xl font-semibold text-gray-900">
-              Approve once. Go live in 90 days. Scale in days.
+              Approve once. Go live fast. Scale in days.
             </h4>
             <p className="mt-2 text-gray-600">
               Identity, governance, and connectors—built in. Your tools, your cloud, your controls.
@@ -451,6 +494,28 @@ function StepCard({
       <div className="text-xs font-semibold text-orange-700">{step}</div>
       <div className="mt-1 text-gray-900 font-medium">{title}</div>
       <div className="mt-2 text-sm text-gray-600">{desc}</div>
+    </div>
+  );
+}
+
+function UseCaseCard({
+  icon,
+  title,
+  desc
+}: {
+  icon: React.ReactNode;
+  title: string;
+  desc: string;
+}) {
+  return (
+    <div className="rounded-xl bg-white border border-gray-200 p-5">
+      <div className="flex items-center gap-2 text-gray-900 font-medium">
+        <span className="inline-flex h-8 w-8 items-center justify-center rounded-md bg-orange-500/10 text-orange-700">
+          {icon}
+        </span>
+        {title}
+      </div>
+      <p className="mt-3 text-sm text-gray-600">{desc}</p>
     </div>
   );
 }
