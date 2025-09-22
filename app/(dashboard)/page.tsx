@@ -1,3 +1,6 @@
+'use client';
+
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import {
@@ -16,9 +19,16 @@ import {
   KeyRound,
   FileCheck2,
   Building2,
-  Users
+  Users,
+  Copy,
+  Sparkles,
+  Zap,
+  Settings2
 } from 'lucide-react';
 
+/* ======================================================
+   PAGE
+====================================================== */
 export default function HomePage() {
   return (
     <main>
@@ -26,7 +36,8 @@ export default function HomePage() {
       <section className="pt-20 pb-16 bg-gradient-to-b from-gray-50 to-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-12 gap-10 items-center">
-            <div className="lg:col-span-7">
+            {/* LEFT */}
+            <div className="lg:col-span-6">
               <span className="inline-flex items-center rounded-full bg-orange-100 px-3 py-1 text-xs font-medium text-orange-700 tracking-wide">
                 TrustPlane
               </span>
@@ -40,7 +51,7 @@ export default function HomePage() {
               <p className="mt-5 text-lg text-gray-600 max-w-2xl">
                 TrustPlane is the <span className="font-semibold">enterprise AI control plane</span> that turns pilots into
                 audited production <span className="font-semibold">in your cloud</span>. Approve identity, governance, and
-                data boundaries once—then ship many agents under the same guardrails. Works with Okta/Entra/Ping,
+                data boundaries once—then ship many governed automations under the same guardrails. Works with Okta/Entra/Ping,
                 Databricks, Snowflake, AWS/Azure/GCP, ServiceNow/Jira, Splunk/Datadog, and Slack/Teams.
               </p>
 
@@ -64,146 +75,61 @@ export default function HomePage() {
                   <ShieldCheck className="h-4 w-4 text-orange-600" /> Approve‑once platform
                 </li>
                 <li className="flex items-center gap-2">
-                  <KeyRound className="h-4 w-4 text-orange-600" /> SSO (SAML) &amp; SCIM
+                  <GitBranch className="h-4 w-4 text-orange-600" /> Read‑first by default
                 </li>
                 <li className="flex items-center gap-2">
-                  <GitBranch className="h-4 w-4 text-orange-600" /> Read‑first connectors &amp; dry‑run
+                  <Shield className="h-4 w-4 text-orange-600" /> Writes require approval
                 </li>
                 <li className="flex items-center gap-2">
-                  <FileCheck2 className="h-4 w-4 text-orange-600" /> Deterministic audit trails
+                  <FileCheck2 className="h-4 w-4 text-orange-600" /> Per‑action audit export
                 </li>
                 <li className="flex items-center gap-2">
                   <Cloud className="h-4 w-4 text-orange-600" /> Runs in your VPC / cloud
                 </li>
                 <li className="flex items-center gap-2">
-                  <Shield className="h-4 w-4 text-orange-600" /> No training on your data by default
+                  <Lock className="h-4 w-4 text-orange-600" /> No training on your data by default
                 </li>
               </ul>
             </div>
 
-            {/* Product snap: Policy Manifest + SDK */}
-            <div className="lg:col-span-5">
-              <div className="rounded-xl bg-gray-900 text-gray-100 shadow-xl ring-1 ring-black/10 overflow-hidden">
-                <div className="px-5 py-4 border-b border-white/10 flex items-center justify-between">
-                  <p className="text-xs font-semibold tracking-wider uppercase text-gray-400">
-                    Platform Policy (YAML)
-                  </p>
-                  <span className="text-[10px] text-gray-400">pre‑approved in your org</span>
-                </div>
-                <pre className="p-5 text-xs leading-relaxed overflow-x-auto">
-{`platform:
-  identity: saml+sso, scim
-  audit:
-    stream: datadog
-  data:
-    residency: us
-    kms: byok
-connectors:
-  - service: snowflake
-    mode: read_first
-  - service: servicenow
-    mode: read_first
-guardrails:
-  write_requires_approval: true
-  pii: redact
-targets:
-  tte_days: 7         # time to evidence
-  ttp_days: 90        # pilot to production
-  mttr_minutes: 5     # safe-mode rollback`}
-                </pre>
-                <div className="px-5 py-4 border-t border-white/10">
-                  <p className="text-xs font-semibold tracking-wider uppercase text-gray-400">
-                    Drop‑in SDK
-                  </p>
-                  <pre className="mt-2 text-xs overflow-x-auto">
-{`import { createClient } from '@TrustPlane/sdk';
-const cp = createClient();
-
-await cp.agent('dataprep').run({
-  input: 'Generate monthly KPI brief from Snowflake',
-  dryRun: true,             // read‑first by default
-  requireApproval: true,    // write actions gated
-  trace: true               // full, exportable audit
-});`}
-                  </pre>
-                </div>
-              </div>
+            {/* RIGHT: interactive panel */}
+            <div className="lg:col-span-6">
+              <ControlPlanePanel />
             </div>
           </div>
         </div>
       </section>
 
-      {/* PROBLEM + WHY NOW */}
+      {/* PROBLEM / WHY NOW */}
       <section className="py-14 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-2 gap-8">
           <Card title="The problem">
-            Fortune‑500s don’t struggle to start pilots—they struggle to clear security, compliance,
-            and integration gates to reach production. TPRM/InfoSec reviews, SSO/SCIM, and app/data
-            integrations routinely add months and kill momentum.
+            Fortune‑500s don’t struggle to start pilots—they struggle to clear security, compliance, and integration gates to
+            reach production. TPRM/InfoSec reviews, SSO/SCIM, and app/data integrations routinely add months and kill momentum.
           </Card>
           <Card title="Why now">
-            Exec teams need ROI this fiscal year. TrustPlane collapses the review/integration path by
-            shipping <em>identity, governance, and connectors</em> as a reusable control plane across
-            the tools you already run—so pilots reach <em>governed canary</em> in days.
+            Exec teams need ROI this fiscal year. TrustPlane collapses the review/integration path by shipping
+            <em> identity, governance, and connectors</em> as a reusable control plane—so pilots reach <em>governed canary</em> in days.
           </Card>
         </div>
       </section>
 
-      {/* WHAT TrustPlane IS */}
+      {/* WHAT */}
       <section className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-gray-900">
-            TrustPlane: the AI control plane that works with your stack
-          </h2>
+          <h2 className="text-3xl font-bold text-gray-900">TrustPlane: the AI control plane that works with your stack</h2>
           <p className="mt-4 text-lg text-gray-600 max-w-3xl">
-            Approve the platform once—identity, audit, and data boundaries—then reuse it for
-            multiple AI agents. We integrate with Databricks, Snowflake, AWS, Azure, GCP;
-            Okta/Entra/Ping; ServiceNow/Jira; Splunk/Datadog; Slack/Teams.
+            Approve the platform once—identity, audit, and data boundaries—then reuse it for multiple AI governed automations. We integrate with
+            Databricks, Snowflake, AWS, Azure, GCP; Okta/Entra/Ping; ServiceNow/Jira; Splunk/Datadog; Slack/Teams.
           </p>
 
           <div className="mt-10 grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <Feature
-              icon={<ShieldCheck className="h-5 w-5" />}
-              title="Approve‑once platform"
-              desc="Centralize platform review for security, compliance, and vendor risk—reused across use cases."
-            />
-            <Feature
-              icon={<KeyRound className="h-5 w-5" />}
-              title="Identity & provisioning"
-              desc="SAML SSO (Okta/Entra/Ping) and SCIM with least‑privilege defaults."
-            />
-            <Feature
-              icon={<GitBranch className="h-5 w-5" />}
-              title="Read‑first connectors"
-              desc="Scoped OAuth, dry‑run, and deterministic audit for Databricks, Snowflake, ServiceNow, Slack/Teams, Splunk/Datadog."
-            />
-            <Feature
-              icon={<LineChart className="h-5 w-5" />}
-              title="Observability & SIEM"
-              desc="OpenTelemetry/Datadog exports, per‑action traces, budget/rate guardrails, and cost/showback."
-            />
-            <Feature
-              icon={<Shield className="h-5 w-5" />}
-              title="Governance on by default"
-              desc="RBAC/ABAC, DLP/PII controls, retention, human‑in‑the‑loop, and eDiscovery hooks."
-            />
-            <Feature
-              icon={<Cloud className="h-5 w-5" />}
-              title="Inside your cloud"
-              desc="Runs in your account; compute and data stay put. No risk of outgrowing the platform."
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* SECURITY & COMPLIANCE STRIP */}
-      <section className="py-8 bg-white border-y border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <SecurityItem icon={<KeyRound className="h-5 w-5" />} title="SSO / SAML / SCIM" desc="Okta, Entra ID, Ping." />
-            <SecurityItem icon={<Lock className="h-5 w-5" />} title="KMS & Secrets" desc="BYOK, Vault integration, data residency." />
-            <SecurityItem icon={<FileCheck2 className="h-5 w-5" />} title="Trust & Compliance" desc="SOC 2 program, audit‑log streaming, DPIA/LLM risk docs." />
-            <SecurityItem icon={<Shield className="h-5 w-5" />} title="Audit & Retention" desc="Per‑action lineage; SIEM export." />
+            <Feature icon={<ShieldCheck className="h-5 w-5" />} title="Approve‑once platform" desc="Centralize platform review for security, compliance, and vendor risk—reused across use cases." />
+            <Feature icon={<KeyRound className="h-5 w-5" />} title="Identity & provisioning" desc="SAML SSO (Okta/Entra/Ping) and SCIM with least‑privilege defaults." />
+            <Feature icon={<GitBranch className="h-5 w-5" />} title="Read‑first connectors" desc="Scoped OAuth, dry‑run, and deterministic audit for Databricks, Snowflake, ServiceNow, Slack/Teams, Splunk/Datadog." />
+            <Feature icon={<LineChart className="h-5 w-5" />} title="Observability & SIEM" desc="OpenTelemetry/Datadog exports, per‑action traces, budget/rate guardrails, and cost/showback." />
+            <Feature icon={<Shield className="h-5 w-5" />} title="Governance on by default" desc="RBAC/ABAC, DLP/PII controls, retention, human‑in‑the‑loop, and eDiscovery hooks." />
+            <Feature icon={<Cloud className="h-5 w-5" />} title="Inside your cloud" desc="Runs in your account; compute and data stay put. No risk of outgrowing the platform." />
           </div>
         </div>
       </section>
@@ -218,9 +144,7 @@ await cp.agent('dataprep').run({
             <Stat icon={<Shield className="h-5 w-5" />} value="100%" label="Per‑action audit coverage" />
             <Stat icon={<Server className="h-5 w-5" />} value="&lt; 5 min" label="Rollback MTTR (safe‑mode)" />
           </div>
-          <p className="mt-4 text-xs text-gray-500">
-            Targets are goals measured against each customer’s historical baselines; not guarantees.
-          </p>
+          <p className="mt-4 text-xs text-gray-500">Targets are goals measured against each customer’s historical baselines; not guarantees.</p>
         </div>
       </section>
 
@@ -229,8 +153,7 @@ await cp.agent('dataprep').run({
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h3 className="text-2xl font-semibold text-gray-900">Start with a hair‑on‑fire workflow</h3>
           <p className="mt-2 text-gray-600 max-w-3xl">
-            Opinionated “Pilot Kits” include pre‑wired connectors, evals, and guardrails—so you can launch canaries in days
-            and scale wins across LoBs.
+            Opinionated “Pilot Kits” include pre‑wired connectors, evals, and guardrails—so you can launch canaries in days and scale wins across LoBs.
           </p>
           <div className="mt-6 grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             <UseCaseCard icon={<FileCheck2 className="h-5 w-5" />} title="Claims triage & severity" desc="Automate first notice, damage assessment, and routing with auditability and human‑in‑the‑loop." />
@@ -243,47 +166,15 @@ await cp.agent('dataprep').run({
         </div>
       </section>
 
-      {/* ROLE-BASED VALUE */}
+      {/* ROLES */}
       <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h3 className="text-2xl font-semibold text-gray-900">Built for enterprise buyers</h3>
           <div className="mt-6 grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <RoleCard
-              icon={<Building2 className="h-5 w-5" />}
-              title="VP Engineering"
-              bullets={[
-                'Approve once across identity, audit, and data boundaries',
-                'One integration to your tools; agents inherit',
-                'Forward‑deployed engineers for the last mile'
-              ]}
-            />
-            <RoleCard
-              icon={<Users className="h-5 w-5" />}
-              title="Head of AI"
-              bullets={[
-                'Two use cases live quickly; expansion in days',
-                'Read‑first connectors with dry‑run',
-                'No training on your data by default'
-              ]}
-            />
-            <RoleCard
-              icon={<DollarSign className="h-5 w-5" />}
-              title="CFO / FinOps"
-              bullets={[
-                'Bring forward ROI by quarters',
-                'True cost per request & team',
-                'Budget guardrails and spend controls'
-              ]}
-            />
-            <RoleCard
-              icon={<Shield className="h-5 w-5" />}
-              title="CISO / Security"
-              bullets={[
-                'SSO/SCIM, RBAC/ABAC, least‑privilege scopes',
-                'Data residency & BYOK/KMS options',
-                'Deterministic audit & eDiscovery hooks'
-              ]}
-            />
+            <RoleCard icon={<Building2 className="h-5 w-5" />} title="VP Engineering" bullets={['Approve once across identity, audit, and data boundaries','One integration to your tools; governed automations inherit','Forward‑deployed engineers for the last mile']} />
+            <RoleCard icon={<Users className="h-5 w-5" />} title="Head of AI" bullets={['Two use cases live quickly; expansion in days','Read‑first connectors with dry‑run','No training on your data by default']} />
+            <RoleCard icon={<DollarSign className="h-5 w-5" />} title="CFO / FinOps" bullets={['Bring forward ROI by quarters','True cost per request & team','Budget guardrails and spend controls']} />
+            <RoleCard icon={<Shield className="h-5 w-5" />} title="CISO / Security" bullets={['SSO/SCIM, RBAC/ABAC, least‑privilege scopes','Data residency & BYOK/KMS options','Deterministic audit & eDiscovery hooks']} />
           </div>
         </div>
       </section>
@@ -293,20 +184,11 @@ await cp.agent('dataprep').run({
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h3 className="text-2xl font-semibold text-gray-900">Control plane capabilities (MVP)</h3>
           <div className="mt-6 grid md:grid-cols-3 gap-6">
-            <Card title="Identity & Access">
-              SAML SSO (Okta/Entra/Ping) plus SCIM user provisioning; least‑privilege roles and policy packs.
-            </Card>
-            <Card title="Connectors (read‑first)">
-              Databricks/Snowflake, ServiceNow, Slack/Teams, Splunk/Datadog—scoped OAuth, dry‑run, and auditable actions.
-            </Card>
-            <Card title="Governance & Observability">
-              Audit‑log streaming, OpenTelemetry/Datadog exports, RBAC/ABAC, retention, and policy‑based approvals.
-            </Card>
+            <Card title="Identity & Access">SAML SSO (Okta/Entra/Ping) plus SCIM user provisioning; least‑privilege roles and policy packs.</Card>
+            <Card title="Connectors (read‑first)">Databricks/Snowflake, ServiceNow, Slack/Teams, Splunk/Datadog—scoped OAuth, dry‑run, and auditable actions.</Card>
+            <Card title="Governance & Observability">Audit‑log streaming, OpenTelemetry/Datadog exports, RBAC/ABAC, retention, and policy‑based approvals.</Card>
           </div>
-
-          <p className="mt-10 text-gray-600">
-            Roadmap: evaluators, prompt & pipeline versioning, workload‑aware autoscaling, and policy‑driven routing across heterogeneous fleets.
-          </p>
+          <p className="mt-10 text-gray-600">Roadmap: evaluators, prompt & pipeline versioning, workload‑aware autoscaling, and policy‑driven routing across heterogeneous fleets.</p>
         </div>
       </section>
 
@@ -322,37 +204,12 @@ await cp.agent('dataprep').run({
         </div>
       </section>
 
-      {/* FAQ / OBJECTIONS */}
-      <section className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h3 className="text-2xl font-semibold text-gray-900">Answers to the first four objections</h3>
-          <div className="mt-6 grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <Card title="Do you train on our data?">
-              No—<span className="font-medium">not by default</span>. Private data is isolated; model providers or open‑weights are configurable by policy.
-            </Card>
-            <Card title="Where does data live?">
-              Inside your cloud/VPC with <span className="font-medium">BYOK/KMS</span> and residency controls. Full audit export to your SIEM.
-            </Card>
-            <Card title="Are we locked in?">
-              Vendor‑neutral routing and standard connectors. Swap models/tools without redoing governance.
-            </Card>
-            <Card title="Security posture?">
-              SOC 2 program, DPIA/LLM risk docs, SSO/SCIM, RBAC/ABAC, and deterministic per‑action lineage for eDiscovery.
-            </Card>
-          </div>
-        </div>
-      </section>
-
       {/* FINAL CTA */}
       <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
           <div>
-            <h4 className="text-2xl font-semibold text-gray-900">
-              Approve once. Go live fast. Scale in days.
-            </h4>
-            <p className="mt-2 text-gray-600">
-              Identity, governance, and connectors—built in. Your tools, your cloud, your controls.
-            </p>
+            <h4 className="text-2xl font-semibold text-gray-900">Approve once. Go live fast. Scale in days.</h4>
+            <p className="mt-2 text-gray-600">Identity, governance, and connectors—built in. Your tools, your cloud, your controls.</p>
           </div>
           <div className="flex gap-3">
             <Button asChild size="lg" className="rounded-full">
@@ -368,23 +225,359 @@ await cp.agent('dataprep').run({
   );
 }
 
-/* ---------- Small presentational components ---------- */
+/* ======================================================
+   HERO RIGHT PANEL — polished, interactive, fixed height
+====================================================== */
+function ControlPlanePanel() {
+  const [tab, setTab] = useState<'Summary' | 'Policy' | 'SDK'>('Summary');
+  const [canary, setCanary] = useState(8);
+  const [status, setStatus] = useState<'idle' | 'canary' | 'promoted'>('idle');
+  const [events, setEvents] = useState<string[]>([]);
+  const barRef = useRef<HTMLDivElement>(null);
 
-function Feature({
-  icon,
-  title,
-  desc
-}: {
-  icon: React.ReactNode;
-  title: string;
-  desc: string;
-}) {
+  // keep track of scheduled timeouts for clean cancellation between cycles
+  const timersRef = useRef<number[]>([]);
+  const clearTimers = () => {
+    timersRef.current.forEach((id) => clearTimeout(id));
+    timersRef.current = [];
+  };
+
+  // Endless, gentle auto‑demo loop
+  useEffect(() => {
+    let active = true;
+    const wait = (ms: number) => new Promise((r) => timersRef.current.push(window.setTimeout(r, ms)));
+
+    const run = async () => {
+      while (active) {
+        // 1) Ensure summary visible briefly
+        setTab('Summary');
+        await wait(700);
+
+        // 2) Kick off canary (jumps to SDK)
+        simulateCanary();
+        await wait(2600);
+
+        // 3) Show policy
+        setTab('Policy');
+        await wait(2000);
+
+        // 4) Return to SDK, then promote
+        setTab('SDK');
+        await wait(500);
+        simulatePromote();
+        await wait(2200);
+
+        // 5) Reset and vary canary %
+        setStatus('idle');
+        setEvents([]);
+        if (barRef.current) barRef.current.style.width = '0%';
+        setCanary(() => {
+          const options = [6, 8, 10, 12, 15];
+          return options[Math.floor(Math.random() * options.length)];
+        });
+
+        await wait(1200);
+      }
+    };
+
+    run();
+    return () => {
+      active = false;
+      clearTimers();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const yaml = useMemo(
+    () =>
+`version: 1
+policy: prod-us-1
+identity:
+  saml: true
+  scim: true
+audit:
+  sink: datadog
+  otel: true
+  retention_days: 365
+data:
+  residency: [us, eu]
+  kms: byok
+  egress: deny_by_default
+  pii: redact
+connectors:
+  snowflake:  { mode: read_first,  role: ANALYST }
+  servicenow: { mode: write_gated }
+guardrails:
+  writes: { approvals: [security, finops] }
+  canary: { pct: ${String(canary).padStart(2, ' ')}, eval: golden:v1, rollback_on: { drift_p95: '>5%' } }
+slo:      { latency_p95_ms: 1200, availability: '99.9%' }
+limits:   { rps: 5, monthly_budget_usd: 25000 }
+targets:  { tte_days: 7, ttc_days: 7, ttp_days: 90, mttr_min: 5 }
+
+`,
+    [canary]
+  );
+
+  function simulateCanary() {
+    clearTimers();
+    setTab('SDK'); // spotlight action
+    setStatus('canary');
+    setEvents(['starting governed canary…']);
+    if (barRef.current) barRef.current.style.width = '0%';
+    const steps = [canary, canary * 2, Math.round(canary * 3), 36, 50];
+    steps.forEach((pct, i) => {
+      const id = window.setTimeout(() => {
+        if (barRef.current) barRef.current.style.width = `${Math.min(pct, 50)}%`;
+        setEvents((e) => [...e, `traffic routed: ${Math.min(pct, 50)}%`]);
+        if (i === steps.length - 1) {
+          setEvents((e) => [...e, 'OpenTelemetry export → Datadog', 'budget & SLO checks ✓']);
+        }
+      }, 260 * (i + 1));
+      timersRef.current.push(id);
+    });
+  }
+
+  function simulatePromote() {
+    setStatus('promoted');
+    setEvents((e) => [...e, 'promotion requested…', 'security approval ✓', 'finops approval ✓', `rollout gate opened to ${canary}%`]);
+    if (barRef.current) barRef.current.style.width = `${Math.min(85, canary + 45)}%`;
+  }
+
+  return (
+    <div className="relative rounded-2xl bg-gray-900 text-gray-100 shadow-2xl ring-1 ring-black/10 overflow-hidden h-[720px]">
+      <div aria-hidden className="absolute inset-0 bg-gradient-to-br from-orange-500/5 via-transparent to-emerald-400/5" />
+
+      {/* header */}
+      <div className="relative px-4 py-3 border-b border-white/10 flex items-center justify-between">
+        <div className="flex gap-1">
+          <Tab label="Summary" active={tab === 'Summary'} onClick={() => setTab('Summary')} />
+          <Tab label="Policy YAML" active={tab === 'Policy'} onClick={() => setTab('Policy')} />
+          <Tab label="SDK" active={tab === 'SDK'} onClick={() => setTab('SDK')} />
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="hidden sm:inline-flex items-center gap-1 px-2 py-0.5 rounded bg-white/5 text-[11px]">
+            <Settings2 className="h-3.5 w-3.5" /> env
+          </span>
+          <span className="px-2 py-0.5 rounded bg-white/10 text-[11px]">prod‑us‑1</span>
+          <span className="text-[10px] text-gray-400">pre‑approved in your org</span>
+        </div>
+      </div>
+
+      {/* content */}
+      <div className="relative h-[660px] pb-4">
+        {tab === 'Summary' && (
+          <div className="h-full px-4 pt-4 grid grid-rows-[1fr_auto] gap-4">
+            {/* tiles */}
+            <div className="grid grid-cols-2 gap-4 text-[12.5px] leading-6">
+              <SummaryTile title="Identity & Access" items={['SSO (SAML) ✓', 'SCIM ✓', 'Roles: Operator, Approver']} />
+              <SummaryTile title="Audit" items={['OpenTelemetry: on', 'Sink: Datadog', 'Retention: 365 days']} />
+              <SummaryTile title="Data boundaries" items={['Residency: US/EU', 'BYOK / KMS: on', 'Egress: deny', 'PII: redact']} />
+              <SummaryTile title="Connectors" items={['Snowflake (read‑first)', 'ServiceNow (write‑gated)', 'Slack, Datadog (read‑first)']} />
+              <SummaryTile title="Guardrails" items={['Writes require approval', 'Approvers: Security, FinOps', `Canary: ${canary}% + auto‑rollback`]} />
+              <SummaryTile title="Budgets & SLOs" items={['Budget: $25k/mo', 'RPS limit: 5', 'SLO: 99.9% • p95 1200ms']} />
+            </div>
+
+            {/* footer bar with extra padding */}
+            <div className="rounded-xl bg-white/5 p-3 flex flex-wrap items-center justify-between gap-3">
+              <div className="flex flex-wrap gap-2">
+                <Pill> TTE ≤ 7d </Pill>
+                <Pill> TTC ≤ 7d </Pill>
+                <Pill> TTP ≤ 90d </Pill>
+                <Pill> MTTR &lt; 5m </Pill>
+              </div>
+              <div className="flex items-center gap-3">
+                <span className="text-[11px] text-gray-300" title="Traffic routed through governed canary">
+                  Canary %
+                </span>
+                <input
+                  type="range"
+                  min={1}
+                  max={50}
+                  value={canary}
+                  onChange={(e) => setCanary(Number(e.target.value))}
+                  className="accent-orange-500 h-1.5 w-28"
+                  aria-label="Canary percentage"
+                />
+                <span className="w-8 text-center text-sm">{canary}</span>
+                <button
+                  onClick={simulateCanary}
+                  className="px-3 py-1 rounded bg-orange-400 text-gray-900 text-[12px] font-semibold hover:bg-orange-300"
+                >
+                  <Sparkles className="inline h-3.5 w-3.5 mr-1" /> Start canary
+                </button>
+                <button
+                  onClick={simulatePromote}
+                  className="px-3 py-1 rounded bg-white/10 text-gray-100 text-[12px] font-semibold hover:bg-white/20"
+                >
+                  <Zap className="inline h-3.5 w-3.5 mr-1" /> Promote {canary}%
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {tab === 'Policy' && (
+          <div className="h-full px-4 pt-4 grid grid-rows-[auto_1fr] gap-3">
+            <div className="flex items-center justify-between">
+              <div className="text-[12px] text-gray-300">Policy as code for GitOps. Updated as you adjust controls.</div>
+              <CopyButton text={yaml} label="Copy YAML" />
+            </div>
+            <div className="rounded-xl bg-black/30 ring-1 ring-white/10 h-full">
+              <pre className="px-4 py-4 text-[12.5px] leading-6 font-mono whitespace-pre text-gray-200 h-full">{yaml}</pre>
+            </div>
+          </div>
+        )}
+
+        {tab === 'SDK' && (
+          <div className="h-full px-4 pt-4 grid grid-rows-[auto_1fr_auto_auto] gap-3">
+            <div className="flex items-center justify-between">
+              <div className="text-[12px] text-gray-300">Drop‑in calls your teams use to move from canary → promote.</div>
+              <CopyButton
+                text={`import com.trustplane.sdk.*;
+import java.util.Arrays;
+
+TrustPlane tp = TrustPlane.newClient()
+    .policy("prod-us-1")
+    .build();
+
+// 1) Start governed canary (read-first, audited)
+tp.canary("ap-matching",
+    CanaryOptions.builder()
+        .dataset("golden:v1")
+        .dryRun(true)
+        .trace(true)
+        .build());
+
+// 2) Request promotion with approvals
+tp.promote("ap-matching",
+    PromoteOptions.builder()
+        .percent(${canary})
+        .approvals(Arrays.asList("security", "finops"))
+        .build());`}
+                label="Copy SDK"
+              />
+            </div>
+
+            {/* Java SDK code */}
+            <div className="rounded-xl bg-black/30 ring-1 ring-white/10 p-4 text-[12.5px] leading-6 font-mono text-gray-200 tabular-nums">
+{`import com.trustplane.sdk.*;
+import java.util.Arrays;
+
+TrustPlane tp = TrustPlane.newClient()
+    .policy("prod-us-1")
+    .build();
+
+// 1) Start governed canary (read-first, audited)
+tp.canary("ap-matching",
+    CanaryOptions.builder()
+        .dataset("golden:v1")
+        .dryRun(true)
+        .trace(true)
+        .build());
+
+// 2) Request promotion with approvals
+tp.promote("ap-matching",
+    PromoteOptions.builder()
+        .percent(${canary})
+        .approvals(Arrays.asList("security", "finops"))
+        .build());`}
+            </div>
+
+            {/* Micro-sim */}
+            <div className="rounded-lg bg-white/5 p-3">
+              <div className="h-2 rounded bg-white/10 overflow-hidden">
+                <div ref={barRef} className="h-full w-0 bg-orange-400 transition-all duration-300" />
+              </div>
+              <div className="mt-2 flex gap-2 flex-wrap text-[11px]">
+                <span className={`px-2 py-0.5 rounded ${status === 'canary' ? 'bg-emerald-300 text-gray-900' : 'bg-white/10 text-gray-200'}`}>
+                  canary
+                </span>
+                <span className={`px-2 py-0.5 rounded ${status === 'promoted' ? 'bg-orange-300 text-gray-900' : 'bg-white/10 text-gray-200'}`}>
+                  promote
+                </span>
+                <span className="px-2 py-0.5 rounded bg-white/10 text-gray-200">audit: on</span>
+                <span className="px-2 py-0.5 rounded bg-white/10 text-gray-200">trace: on</span>
+              </div>
+            </div>
+
+            {/* events */}
+            <div className="rounded-lg bg-black/25 ring-1 ring-white/10 p-3 h-[150px] overflow-hidden">
+              <div className="text-[11px] text-gray-300 mb-1">events</div>
+              <ul className="text-[12px] leading-6 font-mono text-gray-200">
+                {events.length ? events.map((e, idx) => <li key={`${e}-${idx}`}>• {e}</li>) : <li className="text-gray-400">• ready.</li>}
+              </ul>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+/* ======================================================
+   PRESENTATIONAL
+====================================================== */
+function Tab({ label, active, onClick }: { label: string; active: boolean; onClick: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`px-3 py-1.5 text-[12.5px] rounded-md font-medium relative transition ${
+        active ? 'text-white' : 'text-gray-300 hover:text-white'
+      }`}
+      aria-selected={active}
+      role="tab"
+      title={label}
+    >
+      {label}
+      <span className={`absolute left-1/2 -translate-x-1/2 -bottom-2 h-0.5 w-10 rounded ${active ? 'bg-orange-400' : 'bg-transparent'}`} aria-hidden />
+    </button>
+  );
+}
+
+function SummaryTile({ title, items }: { title: string; items: string[] }) {
+  return (
+    <div className="rounded-xl bg-white/5 p-3 min-h-[118px] ring-1 ring-white/5">
+      <div className="text-gray-300">{title}</div>
+      <ul className="mt-1 space-y-1 text-gray-200">
+        {items.map((text, idx) => (
+          <li key={`${title}-${idx}`}>{text}</li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function Pill({ children }: { children: React.ReactNode }) {
+  return <span className="px-2 py-1 rounded bg-orange-200/90 text-gray-900 text-[11px] font-semibold shadow-sm">{children}</span>;
+}
+
+function CopyButton({ text, label }: { text: string; label: string }) {
+  const [copied, setCopied] = useState(false);
+  return (
+    <button
+      type="button"
+      onClick={async () => {
+        try {
+          await navigator.clipboard.writeText(text);
+          setCopied(true);
+          setTimeout(() => setCopied(false), 1200);
+        } catch {}
+      }}
+      className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-white/10 hover:bg-white/20 text-[11px] font-medium"
+      title={label}
+    >
+      <Copy className="h-3.5 w-3.5" />
+      {copied ? 'Copied' : label}
+    </button>
+  );
+}
+
+function Feature({ icon, title, desc }: { icon: React.ReactNode; title: string; desc: string }) {
   return (
     <div className="rounded-xl bg-white border border-gray-200 p-5">
       <div className="flex items-center gap-2 text-gray-900 font-medium">
-        <span className="inline-flex h-8 w-8 items-center justify-center rounded-md bg-orange-500/10 text-orange-700">
-          {icon}
-        </span>
+        <span className="inline-flex h-8 w-8 items-center justify-center rounded-md bg-orange-500/10 text-orange-700">{icon}</span>
         {title}
       </div>
       <p className="mt-3 text-sm text-gray-600">{desc}</p>
@@ -392,13 +585,7 @@ function Feature({
   );
 }
 
-function Card({
-  title,
-  children
-}: {
-  title: string;
-  children: React.ReactNode;
-}) {
+function Card({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div className="rounded-xl bg-white border border-gray-200 p-5">
       <h4 className="text-lg font-medium text-gray-900">{title}</h4>
@@ -407,21 +594,11 @@ function Card({
   );
 }
 
-function Stat({
-  icon,
-  value,
-  label
-}: {
-  icon: React.ReactNode;
-  value: string;
-  label: string;
-}) {
+function Stat({ icon, value, label }: { icon: React.ReactNode; value: string; label: string }) {
   return (
     <div className="rounded-xl border border-gray-200 p-5">
       <div className="flex items-center gap-2 text-gray-900">
-        <span className="inline-flex h-8 w-8 items-center justify-center rounded-md bg-orange-500/10 text-orange-700">
-          {icon}
-        </span>
+        <span className="inline-flex h-8 w-8 items-center justify-center rounded-md bg-orange-500/10 text-orange-700">{icon}</span>
         <span className="text-2xl font-semibold">{value}</span>
       </div>
       <p className="mt-2 text-sm text-gray-600">{label}</p>
@@ -429,20 +606,10 @@ function Stat({
   );
 }
 
-function SecurityItem({
-  icon,
-  title,
-  desc
-}: {
-  icon: React.ReactNode;
-  title: string;
-  desc: string;
-}) {
+function SecurityItem({ icon, title, desc }: { icon: React.ReactNode; title: string; desc: string }) {
   return (
     <div className="rounded-lg border border-gray-200 p-4 flex items-start gap-3">
-      <span className="inline-flex h-8 w-8 items-center justify-center rounded-md bg-orange-500/10 text-orange-700">
-        {icon}
-      </span>
+      <span className="inline-flex h-8 w-8 items-center justify-center rounded-md bg-orange-500/10 text-orange-700">{icon}</span>
       <div>
         <div className="text-sm font-medium text-gray-900">{title}</div>
         <div className="text-sm text-gray-600">{desc}</div>
@@ -451,26 +618,16 @@ function SecurityItem({
   );
 }
 
-function RoleCard({
-  icon,
-  title,
-  bullets
-}: {
-  icon: React.ReactNode;
-  title: string;
-  bullets: string[];
-}) {
+function RoleCard({ icon, title, bullets }: { icon: React.ReactNode; title: string; bullets: string[] }) {
   return (
     <div className="rounded-xl bg-white border border-gray-200 p-5">
       <div className="flex items-center gap-2 text-gray-900 font-medium">
-        <span className="inline-flex h-8 w-8 items-center justify-center rounded-md bg-orange-500/10 text-orange-700">
-          {icon}
-        </span>
+        <span className="inline-flex h-8 w-8 items-center justify-center rounded-md bg-orange-500/10 text-orange-700">{icon}</span>
         {title}
       </div>
       <ul className="mt-3 space-y-2 text-sm text-gray-600">
-        {bullets.map((b) => (
-          <li key={b} className="flex items-start gap-2">
+        {bullets.map((b, idx) => (
+          <li key={`${title}-${idx}`} className="flex items-start gap-2">
             <CheckCircle2 className="h-4 w-4 text-orange-600 mt-0.5" />
             <span>{b}</span>
           </li>
@@ -480,15 +637,7 @@ function RoleCard({
   );
 }
 
-function StepCard({
-  step,
-  title,
-  desc
-}: {
-  step: string;
-  title: string;
-  desc: string;
-}) {
+function StepCard({ step, title, desc }: { step: string; title: string; desc: string }) {
   return (
     <div className="rounded-xl bg-white border border-gray-200 p-5">
       <div className="text-xs font-semibold text-orange-700">{step}</div>
@@ -498,21 +647,11 @@ function StepCard({
   );
 }
 
-function UseCaseCard({
-  icon,
-  title,
-  desc
-}: {
-  icon: React.ReactNode;
-  title: string;
-  desc: string;
-}) {
+function UseCaseCard({ icon, title, desc }: { icon: React.ReactNode; title: string; desc: string }) {
   return (
     <div className="rounded-xl bg-white border border-gray-200 p-5">
       <div className="flex items-center gap-2 text-gray-900 font-medium">
-        <span className="inline-flex h-8 w-8 items-center justify-center rounded-md bg-orange-500/10 text-orange-700">
-          {icon}
-        </span>
+        <span className="inline-flex h-8 w-8 items-center justify-center rounded-md bg-orange-500/10 text-orange-700">{icon}</span>
         {title}
       </div>
       <p className="mt-3 text-sm text-gray-600">{desc}</p>
