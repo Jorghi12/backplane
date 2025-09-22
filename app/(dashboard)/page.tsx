@@ -26,9 +26,6 @@ import {
   Settings2,
   BadgeCheck,
   FileText,
-  Pause,
-  Play,
-  Info,
 } from 'lucide-react';
 
 /* ======================================================
@@ -54,10 +51,10 @@ export default function HomePage() {
               </h1>
 
               <p className="mt-5 text-lg text-gray-600 max-w-2xl">
-                TrustPlane is the <span className="font-semibold">enterprise AI control plane</span> that gets pilots to audited production
-                <span className="font-semibold"> in your cloud</span>. Approve identity, governance, and data boundaries once—then roll out
-                <span className="font-semibold"> governed automations</span> with action‑level attestations across Okta/Entra ID/Ping; Databricks/Snowflake;
-                AWS/Azure/GCP; ServiceNow/Jira; Splunk/Datadog; Slack/Teams.
+                TrustPlane is the <span className="font-semibold">enterprise AI control plane</span> that gets pilots to audited
+                production <span className="font-semibold">in your cloud</span>. Approve identity, governance, and data boundaries once—then
+                roll out <span className="font-semibold">governed automations</span> with action‑level attestations across Okta/Entra ID/Ping;
+                Databricks/Snowflake; AWS/Azure/GCP; ServiceNow/Jira; Splunk/Datadog; Slack/Teams.
               </p>
 
               <div className="mt-8 flex flex-wrap gap-3">
@@ -75,7 +72,7 @@ export default function HomePage() {
                 </Button>
               </div>
 
-              {/* Ordered for Enterprise scanning (sovereignty → writes → audit) */}
+              {/* Sovereignty → writes → audit (enterprise scan order) */}
               <ul className="mt-8 grid grid-cols-2 gap-4 text-sm text-gray-700">
                 <li className="flex items-center gap-2">
                   <Cloud className="h-4 w-4 text-orange-600" aria-hidden /> Runs in your VPC/cloud
@@ -114,8 +111,9 @@ export default function HomePage() {
             reach production. TPRM/InfoSec, SSO/SCIM, and app/data write‑paths routinely add months and kill momentum.
           </Card>
           <Card title="Why now">
-            CFOs demand ROI; CISOs need evidence. TrustPlane ships <em>identity, governance, and connectors</em> as a reusable
-            control plane with <em>portable audit artifacts</em>—so Security can say <span className="font-medium">yes once</span>, then reuse across teams.
+            <span className="font-medium">CFOs need ROI this fiscal year. CISOs need evidence.</span> TrustPlane ships
+            <em> identity, governance, and connectors</em> as a reusable control plane—so pilots reach
+            <em> governed canary</em> in days.
           </Card>
         </div>
       </section>
@@ -247,16 +245,13 @@ export default function HomePage() {
       <section className="py-14 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h3 className="text-2xl font-semibold text-gray-900">Enterprise outcomes</h3>
-        <div className="mt-6 grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="mt-6 grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
             <Stat icon={<Activity className="h-5 w-5" aria-hidden />} value="≤ 7 days" label="Time‑to‑evidence (governed canary)" />
             <Stat icon={<Gauge className="h-5 w-5" aria-hidden />} value="≤ 90 days" label="Pilot → certified production" />
             <Stat icon={<Shield className="h-5 w-5" aria-hidden />} value="100%" label="Per‑action audit coverage" />
             <Stat icon={<Server className="h-5 w-5" aria-hidden />} value="&lt; 5 min" label="Rollback MTTR (safe‑mode)" />
           </div>
           <p className="mt-4 text-xs text-gray-500">
-            <span className="inline-flex items-center gap-1"><Info className="h-3.5 w-3.5" aria-hidden />TTE</span> = first audit‑ready canary;{' '}
-            <span className="inline-flex items-center gap-1"><Info className="h-3.5 w-3.5" aria-hidden />TTP</span> = pilot→production;{' '}
-            <span className="inline-flex items-center gap-1"><Info className="h-3.5 w-3.5" aria-hidden />MTTR</span> = mean time to rollback.
             Targets reflect goals vs. your historical baseline and are <span className="font-medium">not guarantees</span>.
           </p>
         </div>
@@ -674,7 +669,7 @@ await tp.promote("ap-matching", {
         if (i === steps.length - 1) {
           setEvents((e) => [...e, 'OpenTelemetry export → Datadog', 'budget & SLO checks ✓']);
         }
-      }, reduced ? 0 : 320 * (i + 1))
+      }, 320 * (i + 1))
     );
   }
 
@@ -753,21 +748,11 @@ await tp.promote("ap-matching", {
             <Tab id={tabIds.Certificate.tab} panelId={tabIds.Certificate.panel} label="Certificate" active={tab === 'Certificate'} onClick={() => clickTab('Certificate')} />
           </div>
           <div className="flex items-center gap-2">
-            <button
-              type="button"
-              onClick={() => setPaused((p) => !p)}
-              className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-white/8 text-[11px] border border-white/10"
-              title={paused ? 'Resume tour' : 'Pause tour'}
-              aria-pressed={paused}
-            >
-              {paused ? <Play className="h-3.5 w-3.5" aria-hidden /> : <Pause className="h-3.5 w-3.5" aria-hidden />}
-              {paused ? 'resume' : 'pause'}
-            </button>
             <span title="Runtime environment" className="hidden sm:inline-flex items-center gap-1 px-2 py-0.5 rounded bg-white/8 text-[11px] border border-white/10">
               <Settings2 className="h-3.5 w-3.5" aria-hidden /> env
             </span>
             <span className="px-2 py-0.5 rounded bg-white/10 text-[11px]">prod‑us‑1</span>
-            <span className="text-[10px] text-gray-400">pre‑approved in your org</span>
+            <span className="text-[10px] text-gray-400">pre‑approved in demo org</span>
           </div>
         </div>
 
