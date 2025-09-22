@@ -483,11 +483,6 @@ public class Example {
             <Tab label="SDK" active={tab === 'SDK'} onClick={() => clickTab('SDK')} />
           </div>
           <div className="flex items-center gap-2">
-            {paused && (
-              <span className="px-2 py-0.5 rounded bg-white/10 text-[11px] text-orange-200 border border-white/10">
-                Auto‑demo paused — resumes shortly
-              </span>
-            )}
             <span title="Runtime environment" className="hidden sm:inline-flex items-center gap-1 px-2 py-0.5 rounded bg-white/8 text-[11px] border border-white/10">
               <Settings2 className="h-3.5 w-3.5" /> env
             </span>
