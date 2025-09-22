@@ -25,6 +25,10 @@ import {
   Zap,
   Settings2,
   BadgeCheck,
+  FileText,
+  Pause,
+  Play,
+  Info,
 } from 'lucide-react';
 
 /* ======================================================
@@ -44,23 +48,23 @@ export default function HomePage() {
               </span>
 
               <h1 className="mt-4 text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-gray-900 heading-tight">
-                Approve once. <span className="text-orange-600">Governed canary</span> in under a week.
+                Approve once. <span className="text-orange-600">Governed canary</span> in ≤ 7 days.
                 <br className="hidden sm:block" />
                 Certified production in <span className="text-orange-600">≤ 90 days</span>.
               </h1>
 
               <p className="mt-5 text-lg text-gray-600 max-w-2xl">
-                TrustPlane is the <span className="font-semibold">enterprise AI control plane</span> that gets pilots to audited
-                production <span className="font-semibold">in your cloud</span>. Approve identity, governance, and data boundaries once—then
-                roll out <span className="font-semibold">governed automations</span> with action‑level attestations across the stack you already run:
-                <span className="whitespace-nowrap"> Okta, Microsoft Entra ID, Ping</span>; Databricks, Snowflake; AWS, Azure, GCP; ServiceNow, Jira; Splunk, Datadog; Slack, <span className="whitespace-nowrap">Microsoft Teams</span>.
+                TrustPlane is the <span className="font-semibold">enterprise AI control plane</span> that gets pilots to audited production
+                <span className="font-semibold"> in your cloud</span>. Approve identity, governance, and data boundaries once—then roll out
+                <span className="font-semibold"> governed automations</span> with action‑level attestations across Okta/Entra ID/Ping; Databricks/Snowflake;
+                AWS/Azure/GCP; ServiceNow/Jira; Splunk/Datadog; Slack/Teams.
               </p>
 
               <div className="mt-8 flex flex-wrap gap-3">
                 <Button asChild size="lg" className="rounded-full">
                   <Link href="/contact">
                     Talk to engineering
-                    <ArrowRight className="ml-2 h-5 w-5" />
+                    <ArrowRight className="ml-2 h-5 w-5" aria-hidden />
                   </Link>
                 </Button>
                 <Button asChild size="lg" variant="outline" className="rounded-full">
@@ -71,12 +75,10 @@ export default function HomePage() {
                 </Button>
               </div>
 
+              {/* Ordered for Enterprise scanning (sovereignty → writes → audit) */}
               <ul className="mt-8 grid grid-cols-2 gap-4 text-sm text-gray-700">
                 <li className="flex items-center gap-2">
-                  <ShieldCheck className="h-4 w-4 text-orange-600" aria-hidden /> Approve‑once platform
-                </li>
-                <li className="flex items-center gap-2">
-                  <GitBranch className="h-4 w-4 text-orange-600" aria-hidden /> Read‑first by default
+                  <Cloud className="h-4 w-4 text-orange-600" aria-hidden /> Runs in your VPC/cloud
                 </li>
                 <li className="flex items-center gap-2">
                   <Shield className="h-4 w-4 text-orange-600" aria-hidden /> Writes require approval
@@ -85,10 +87,13 @@ export default function HomePage() {
                   <FileCheck2 className="h-4 w-4 text-orange-600" aria-hidden /> Action Certificates (attested writes)
                 </li>
                 <li className="flex items-center gap-2">
-                  <Cloud className="h-4 w-4 text-orange-600" aria-hidden /> Runs in your VPC/cloud
+                  <GitBranch className="h-4 w-4 text-orange-600" aria-hidden /> Read‑first by default
                 </li>
                 <li className="flex items-center gap-2">
                   <Lock className="h-4 w-4 text-orange-600" aria-hidden /> No training on your data <span className="italic">(unless you opt in)</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <ShieldCheck className="h-4 w-4 text-orange-600" aria-hidden /> Approve‑once platform
                 </li>
               </ul>
             </div>
@@ -105,14 +110,12 @@ export default function HomePage() {
       <section className="py-14 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-2 gap-8">
           <Card title="The problem">
-            Fortune‑500s don’t struggle to start pilots—they struggle to clear security, compliance, and
-            integration gates to reach production. TPRM/InfoSec reviews, SSO/SCIM, and app/data integrations
-            routinely add months and kill momentum.
+            Enterprises don’t struggle to start pilots—they struggle to clear security, compliance, and integration gates to
+            reach production. TPRM/InfoSec, SSO/SCIM, and app/data write‑paths routinely add months and kill momentum.
           </Card>
           <Card title="Why now">
-            Exec teams need ROI this fiscal year. TrustPlane collapses the review and integration path by shipping
-            <em> identity, governance, and connectors</em> as a reusable control plane—so pilots reach
-            <em> governed canary</em> in days.
+            CFOs demand ROI; CISOs need evidence. TrustPlane ships <em>identity, governance, and connectors</em> as a reusable
+            control plane with <em>portable audit artifacts</em>—so Security can say <span className="font-medium">yes once</span>, then reuse across teams.
           </Card>
         </div>
       </section>
@@ -120,9 +123,7 @@ export default function HomePage() {
       {/* WHAT */}
       <section className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-gray-900 heading-tight">
-            TrustPlane: the AI control plane that works with your stack
-          </h2>
+          <h2 className="text-3xl font-bold text-gray-900 heading-tight">TrustPlane: the AI control plane that works with your stack</h2>
           <p className="mt-4 text-lg text-gray-600 max-w-3xl">
             Approve the platform once—identity, audit, and data boundaries—then reuse it for multiple <span className="font-medium">governed automations</span>.
             We integrate with Databricks, Snowflake, AWS, Azure, GCP; <span className="whitespace-nowrap">Okta, Microsoft Entra ID, Ping</span>;
@@ -147,8 +148,8 @@ export default function HomePage() {
             />
             <Feature
               icon={<LineChart className="h-5 w-5" aria-hidden />}
-              title="Observability & SIEM"
-              desc="OpenTelemetry and Datadog exports, per‑action traces, budget/rate guardrails, and cost/showback."
+              title="Observability, SIEM & cost"
+              desc="OpenTelemetry/Datadog exports, per‑action traces, budget/rate guardrails, and cost/showback for FinOps."
             />
             <Feature
               icon={<Shield className="h-5 w-5" aria-hidden />}
@@ -174,14 +175,70 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* ACTION CERTIFICATES */}
+      <section className="py-16 bg-white border-y border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid lg:grid-cols-2 gap-8 items-start">
+            <div>
+              <h3 className="text-2xl font-semibold text-gray-900">Action Certificates (attested writes)</h3>
+              <p className="mt-3 text-gray-600">
+                Every sensitive write is accompanied by a signed, portable artifact—an <em>Action Certificate</em>—containing policy versions,
+                evaluation results, approver identities, rollout scope, cost/SLO snapshots, and a COSE signature.
+                Platforms can <span className="font-medium">require a valid certificate before any side‑effects</span>.
+              </p>
+              <ul className="mt-4 space-y-2 text-sm text-gray-700">
+                <li className="flex items-start gap-2">
+                  <CheckCircle2 className="h-4 w-4 text-orange-600 mt-0.5" aria-hidden /> COSE‑signed record of each approved action
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle2 className="h-4 w-4 text-orange-600 mt-0.5" aria-hidden /> Portable across ServiceNow, Snowflake, Slack, Databricks, and more
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle2 className="h-4 w-4 text-orange-600 mt-0.5" aria-hidden /> OTel export to Splunk/Datadog; eDiscovery &amp; retention friendly
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle2 className="h-4 w-4 text-orange-600 mt-0.5" aria-hidden /> Optional transparency log (append‑only) in your account
+                </li>
+              </ul>
+              <div className="mt-6 flex gap-3">
+                <Button asChild className="rounded-full">
+                  <Link href="#panel-certificate">View sample certificate</Link>
+                </Button>
+                <Button asChild variant="outline" className="rounded-full">
+                  <Link href="/docs/action-certificates">How verification works</Link>
+                </Button>
+              </div>
+            </div>
+
+            <div className="rounded-xl border border-dashed border-gray-300 p-5 bg-gray-50">
+              <div className="flex items-center gap-2 text-gray-900 font-medium">
+                <span className="inline-flex h-8 w-8 items-center justify-center rounded-md bg-orange-500/10 text-orange-700">
+                  <FileText className="h-5 w-5" aria-hidden />
+                </span>
+                Evidence bundles (EU AI Act / NIST AI RMF)
+              </div>
+              <p className="mt-2 text-sm text-gray-600">
+                TrustPlane maps identity, policy, audit, and certificates into evidence packs you can hand to Security, Legal, and Audit.
+                Export controls + artifacts without leaving your VPC.
+              </p>
+              <ul className="mt-3 text-sm text-gray-700 space-y-1">
+                <li>• Control mappings with <span className="font-medium">policy version hashes</span></li>
+                <li>• <span className="font-medium">Per‑action lineage</span> + certificate links</li>
+                <li>• <span className="font-medium">DPIA/LLM‑risk</span> templates &amp; runbooks</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* SECURITY & COMPLIANCE STRIP */}
-      <section className="py-8 bg-white border-y border-gray-200">
+      <section className="py-8 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <SecurityItem icon={<KeyRound className="h-5 w-5" aria-hidden />} title="SSO / SAML / SCIM" desc="Okta, Microsoft Entra ID, Ping." />
             <SecurityItem icon={<Lock className="h-5 w-5" aria-hidden />} title="KMS & Secrets" desc="BYOK, Vault integration, data residency." />
-            <SecurityItem icon={<FileCheck2 className="h-5 w-5" aria-hidden />} title="Trust & Compliance" desc="SOC 2 program, audit‑log streaming, DPIA/LLM‑risk docs." />
-            <SecurityItem icon={<Shield className="h-5 w-5" aria-hidden />} title="Audit & Retention" desc="Per‑action lineage; SIEM export." />
+            <SecurityItem icon={<FileCheck2 className="h-5 w-5" aria-hidden />} title="Audit & Compliance" desc="SOC 2 program, audit‑log streaming, DPIA/LLM‑risk docs." />
+            <SecurityItem icon={<Shield className="h-5 w-5" aria-hidden />} title="Policy‑as‑code" desc="YAML → OPA/Cedar with unit‑tested gates." />
           </div>
         </div>
       </section>
@@ -190,14 +247,17 @@ export default function HomePage() {
       <section className="py-14 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h3 className="text-2xl font-semibold text-gray-900">Enterprise outcomes</h3>
-          <div className="mt-6 grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="mt-6 grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
             <Stat icon={<Activity className="h-5 w-5" aria-hidden />} value="≤ 7 days" label="Time‑to‑evidence (governed canary)" />
             <Stat icon={<Gauge className="h-5 w-5" aria-hidden />} value="≤ 90 days" label="Pilot → certified production" />
             <Stat icon={<Shield className="h-5 w-5" aria-hidden />} value="100%" label="Per‑action audit coverage" />
             <Stat icon={<Server className="h-5 w-5" aria-hidden />} value="&lt; 5 min" label="Rollback MTTR (safe‑mode)" />
           </div>
           <p className="mt-4 text-xs text-gray-500">
-            Targets reflect goals against each customer’s historical baseline and are <span className="font-medium">not guarantees</span>.
+            <span className="inline-flex items-center gap-1"><Info className="h-3.5 w-3.5" aria-hidden />TTE</span> = first audit‑ready canary;{' '}
+            <span className="inline-flex items-center gap-1"><Info className="h-3.5 w-3.5" aria-hidden />TTP</span> = pilot→production;{' '}
+            <span className="inline-flex items-center gap-1"><Info className="h-3.5 w-3.5" aria-hidden />MTTR</span> = mean time to rollback.
+            Targets reflect goals vs. your historical baseline and are <span className="font-medium">not guarantees</span>.
           </p>
         </div>
       </section>
@@ -211,11 +271,11 @@ export default function HomePage() {
             in days and scale wins across LoBs.
           </p>
           <div className="mt-6 grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <UseCaseCard icon={<FileCheck2 className="h-5 w-5" aria-hidden />} title="Claims triage & severity" desc="Automate first notice, damage assessment, and routing with auditability and human‑in‑the‑loop." />
-            <UseCaseCard icon={<DollarSign className="h-5 w-5" aria-hidden />} title="AP / invoice matching" desc="Match, enrich, and post with deterministic write gates and rollback safeguards." />
-            <UseCaseCard icon={<LineChart className="h-5 w-5" aria-hidden />} title="Product attribution & tagging" desc="Tag and localize assets across DAM/CMS with per‑action lineage for eDiscovery." />
-            <UseCaseCard icon={<Shield className="h-5 w-5" aria-hidden />} title="KYC / AML screening" desc="Assist analysts with policy‑based approvals, retention, and audit exports to SIEM." />
-            <UseCaseCard icon={<Activity className="h-5 w-5" aria-hidden />} title="KPI brief from data" desc="Automate monthly executive readouts from Snowflake/Databricks—no data leaves your cloud." />
+            <UseCaseCard icon={<FileCheck2 className="h-5 w-5" aria-hidden />} title="Claims triage & severity" desc="Automate first notice, damage assessment, and routing with auditability, HITL, and certificate‑verified writes." />
+            <UseCaseCard icon={<DollarSign className="h-5 w-5" aria-hidden />} title="AP / invoice matching" desc="Match, enrich, and post with deterministic write gates, approvals, and rollback safeguards." />
+            <UseCaseCard icon={<LineChart className="h-5 w-5" aria-hidden />} title="Product attribution & tagging" desc="Tag/localize assets across DAM/CMS with per‑action lineage for eDiscovery." />
+            <UseCaseCard icon={<Shield className="h-5 w-5" aria-hidden />} title="KYC / AML screening" desc="Assist analysts with policy‑based approvals, retention, and SIEM exports." />
+            <UseCaseCard icon={<Activity className="h-5 w-5" aria-hidden />} title="KPI brief from data" desc="Generate monthly executive briefings from Snowflake/Databricks—no data leaves your cloud." />
             <UseCaseCard icon={<Users className="h-5 w-5" aria-hidden />} title="Customer support deflection" desc="RAG + tools with deterministic guardrails; escalate to human queues on policy triggers." />
           </div>
 
@@ -259,8 +319,8 @@ export default function HomePage() {
               title="CFO / FinOps"
               bullets={[
                 'Bring forward ROI by quarters',
-                'Per‑request and per‑team cost visibility',
-                'Budget guardrails and spend controls',
+                'Cost‑per‑approved‑action & per‑team showback',
+                'Budget guardrails & spend controls',
               ]}
             />
             <RoleCard
@@ -269,7 +329,7 @@ export default function HomePage() {
               bullets={[
                 'SSO/SCIM, RBAC/ABAC, least‑privilege scopes',
                 'Data residency & BYOK/KMS options',
-                'Deterministic audit & eDiscovery hooks',
+                'Certificate‑verified writes; deterministic audit & eDiscovery',
               ]}
             />
           </div>
@@ -292,8 +352,8 @@ export default function HomePage() {
             </Card>
           </div>
           <p className="mt-10 text-gray-600">
-            Roadmap: <span className="font-medium">Evaluation contracts</span>, prompt &amp; pipeline versioning, workload‑aware autoscaling, and policy‑driven routing
-            across heterogeneous fleets.
+            Roadmap: <span className="font-medium">Evaluation contracts</span> as promotion gates, prompt &amp; pipeline versioning, workload‑aware autoscaling,
+            and policy‑driven routing across heterogeneous fleets.
           </p>
         </div>
       </section>
@@ -368,14 +428,19 @@ export default function HomePage() {
 }
 
 /* ======================================================
-   HERO RIGHT PANEL — interactive, timed tour + pause/resume
+   HERO RIGHT PANEL — interactive, timed tour (a11y + reduced motion aware)
 ====================================================== */
 function ControlPlanePanel() {
-  const [tab, setTab] = useState<'Summary' | 'Policy' | 'SDK'>('Summary');
+  const [tab, setTab] = useState<'Summary' | 'Policy' | 'SDK' | 'Certificate'>('Summary');
+  const [policyView, setPolicyView] = useState<'YAML' | 'Cedar'>('YAML');
+  const [sdkLang, setSdkLang] = useState<'java' | 'python' | 'ts'>('java');
+
   const [canary, setCanary] = useState(10);
   const [status, setStatus] = useState<'idle' | 'canary' | 'promoted'>('idle');
   const [events, setEvents] = useState<string[]>([]);
   const [paused, setPaused] = useState(false);
+  const [certificate, setCertificate] = useState<string>('');
+  const [reduced, setReduced] = useState(false);
 
   const barRef = useRef<HTMLDivElement>(null);
 
@@ -393,41 +458,45 @@ function ControlPlanePanel() {
     timeouts.current = [];
   };
 
+  // honor prefers-reduced-motion
+  useEffect(() => {
+    const m = window.matchMedia?.('(prefers-reduced-motion: reduce)');
+    setReduced(!!m?.matches);
+    const onChange = () => setReduced(!!m?.matches);
+    m?.addEventListener?.('change', onChange);
+    return () => m?.removeEventListener?.('change', onChange);
+  }, []);
+
   // ---- Auto Tour Orchestrator ------------------------------------------------
   const startTour = () => {
-    if (paused) return; // safety
+    if (paused || reduced) return;
     clearAll();
 
     // Readable dwell times (ms)
-    const D = { summary: 4200, canary: 4200, policy: 5200, promote: 4500, gap: 800 };
+    const D = { summary: 4200, canary: 4200, policy: 5400, promote: 4800, gap: 900 };
 
     let t = 0;
 
-    // 1) Summary
     schedule(() => setTab('Summary'), (t += 0));
     t += D.summary;
 
-    // 2) SDK (canary)
     schedule(() => {
       setTab('SDK');
       simulateCanary();
     }, t);
     t += D.canary;
 
-    // 3) Policy YAML
     schedule(() => setTab('Policy'), t);
     t += D.policy;
 
-    // 4) SDK (promote)
     schedule(() => {
       setTab('SDK');
       simulatePromote();
     }, t);
     t += D.promote;
 
-    // loop again
     schedule(() => {
-      if (!paused) startTour();
+      if (!paused && !reduced) startTour();
     }, t + D.gap);
   };
 
@@ -446,7 +515,7 @@ function ControlPlanePanel() {
     }, ms);
   };
 
-  // Any user interaction pauses the tour; after a moment it resumes.
+  // Any interaction pauses the tour briefly
   useEffect(() => {
     const onInteract = () => pauseFor(15_000);
     window.addEventListener('pointerdown', onInteract, { passive: true });
@@ -455,7 +524,6 @@ function ControlPlanePanel() {
       window.removeEventListener('pointerdown', onInteract);
       window.removeEventListener('keydown', onInteract);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Boot the tour on mount
@@ -463,9 +531,9 @@ function ControlPlanePanel() {
     startTour();
     return clearAll;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [reduced, paused]);
 
-  // ---- Content (YAML + SDK) --------------------------------------------------
+  // ---- Content (Policy, SDK, Certificate) -----------------------------------
   const yaml = useMemo(
     () =>
 `version: 1
@@ -491,8 +559,24 @@ guardrails:
 slo:      { latency_p95_ms: 1200, availability: '99.9%' }
 limits:   { rps: 5, monthly_budget_usd: 25000 }
 targets:  { tte_days: 7, ttc_days: 7, ttp_days: 90, mttr_min: 5 }
-
 `,
+    [canary]
+  );
+
+  const cedar = useMemo(
+    () =>
+`// compiled sketch (illustrative)
+permit(write, subject, resource)
+when {
+  resource.is("servicenow:ticket")
+  && subject in ApproverGroup::"security"
+  && subject in ApproverGroup::"finops"
+  && context.canary_percent <= ${canary}
+  && context.eval.contract == "golden:v1"
+  && context.eval.drift_p95 < 0.05
+  && context.budget.monthly <= 25000
+  && context.slo.latency_p95_ms <= 1200
+};`,
     [canary]
   );
 
@@ -529,6 +613,52 @@ public class Example {
     [canary]
   );
 
+  const pySdk = useMemo(
+    () =>
+`from trustplane import TrustPlane
+
+tp = TrustPlane(policy="prod-us-1")
+
+# 1) Governed canary
+tp.canary(
+  "ap-matching",
+  dataset="golden:v1",
+  dry_run=True,
+  trace=True,
+)
+
+# 2) Promote with approvals
+tp.promote(
+  "ap-matching",
+  percent=${canary},
+  approvals=["security","finops"]
+)
+`,
+    [canary]
+  );
+
+  const tsSdk = useMemo(
+    () =>
+`import { TrustPlane } from "@trustplane/sdk";
+
+const tp = new TrustPlane({ policy: "prod-us-1" });
+
+// 1) Governed canary
+await tp.canary("ap-matching", {
+  dataset: "golden:v1",
+  dryRun: true,
+  trace: true,
+});
+
+// 2) Promote with approvals
+await tp.promote("ap-matching", {
+  percent: ${canary},
+  approvals: ["security", "finops"],
+});
+`,
+    [canary]
+  );
+
   // ---- Micro-sim helpers -----------------------------------------------------
   function simulateCanary() {
     setStatus('canary');
@@ -544,7 +674,7 @@ public class Example {
         if (i === steps.length - 1) {
           setEvents((e) => [...e, 'OpenTelemetry export → Datadog', 'budget & SLO checks ✓']);
         }
-      }, 320 * (i + 1))
+      }, reduced ? 0 : 320 * (i + 1))
     );
   }
 
@@ -556,12 +686,42 @@ public class Example {
       'security approval ✓',
       'finops approval ✓',
       `rollout gate opened to ${canary}%`,
+      'Action Certificate minted ✓',
     ]);
     if (barRef.current) barRef.current.style.width = `${Math.min(85, canary + 45)}%`;
+
+    // sample certificate sketch
+    const now = new Date().toISOString();
+    const cert = {
+      type: 'trustplane.action_certificate.v1',
+      action_id: 'act_' + Math.random().toString(36).slice(2, 10),
+      use_case: 'ap-matching',
+      timestamp: now,
+      request_hash: 'sha256:2a6e…8d4b',
+      response_hash: 'sha256:7f1c…a2b1',
+      policy: { id: 'prod-us-1', hash: 'sha256:9c73…f5a0' },
+      evaluation: {
+        contract: 'golden:v1',
+        metrics: { accuracy: 0.98, drift_p95: '3.1%' },
+        passed: true,
+      },
+      approvals: ['security', 'finops'],
+      rollout: { percent: canary },
+      budget_snapshot: { monthly_budget_usd: 25000, spent_usd: 8300 },
+      slo_snapshot: { latency_p95_ms: 910, availability: '99.95%' },
+      model: { provider: 'vendor:family', version: '2025-08-15', route: 'us-east' },
+      tooling: {
+        connectors: ['snowflake:read_first', 'servicenow:write_gated'],
+        prompt_hash: 'sha256:f01d…0a2c',
+        pipeline_version: 'r2025.09.1',
+      },
+      signatures: [{ alg: 'Ed25519', key_id: 'k-abc123', sig: 'base64:…', format: 'COSE_Sign1' }],
+    };
+    setCertificate(JSON.stringify(cert, null, 2));
   }
 
-  // Tab click should also pause the tour
-  const clickTab = (name: 'Summary' | 'Policy' | 'SDK') => {
+  // Tab click pauses tour
+  const clickTab = (name: typeof tab) => {
     pauseFor();
     setTab(name);
   };
@@ -570,39 +730,39 @@ public class Example {
     Summary: { tab: 'tab-summary', panel: 'panel-summary' },
     Policy: { tab: 'tab-policy', panel: 'panel-policy' },
     SDK: { tab: 'tab-sdk', panel: 'panel-sdk' },
+    Certificate: { tab: 'tab-cert', panel: 'panel-cert' },
   } as const;
 
+  const sdkByLang: Record<typeof sdkLang, string> = {
+    java: javaSdk,
+    python: pySdk,
+    ts: tsSdk,
+  };
+
   return (
-    <div className="relative rounded-[20px] overflow-hidden h-[660px] md:h-[740px] lg:h-[820px] select-none">
+    <div className="relative rounded-[20px] overflow-hidden h-[720px] md:h-[800px] lg:h-[880px] select-none" id="panel-certificate">
       {/* subtle glow & frame */}
       <div className="absolute inset-0 rounded-[20px] bg-gradient-to-br from-white/20 via-white/5 to-transparent pointer-events-none" />
       <div className="relative h-full rounded-[20px] bg-[#0E1217] text-gray-100 shadow-2xl ring-1 ring-white/10 overflow-hidden">
         {/* header */}
         <div className="sticky top-0 z-10 px-4 py-3 backdrop-blur-[6px] bg-white/6 border-b border-white/10 flex items-center justify-between">
           <div className="flex gap-1" role="tablist" aria-label="Control panel tabs">
-            <Tab
-              id={tabIds.Summary.tab}
-              panelId={tabIds.Summary.panel}
-              label="Summary"
-              active={tab === 'Summary'}
-              onClick={() => clickTab('Summary')}
-            />
-            <Tab
-              id={tabIds.Policy.tab}
-              panelId={tabIds.Policy.panel}
-              label="Policy YAML"
-              active={tab === 'Policy'}
-              onClick={() => clickTab('Policy')}
-            />
-            <Tab
-              id={tabIds.SDK.tab}
-              panelId={tabIds.SDK.panel}
-              label="SDK"
-              active={tab === 'SDK'}
-              onClick={() => clickTab('SDK')}
-            />
+            <Tab id={tabIds.Summary.tab} panelId={tabIds.Summary.panel} label="Summary" active={tab === 'Summary'} onClick={() => clickTab('Summary')} />
+            <Tab id={tabIds.Policy.tab} panelId={tabIds.Policy.panel} label="Policy" active={tab === 'Policy'} onClick={() => clickTab('Policy')} />
+            <Tab id={tabIds.SDK.tab} panelId={tabIds.SDK.panel} label="SDK" active={tab === 'SDK'} onClick={() => clickTab('SDK')} />
+            <Tab id={tabIds.Certificate.tab} panelId={tabIds.Certificate.panel} label="Certificate" active={tab === 'Certificate'} onClick={() => clickTab('Certificate')} />
           </div>
           <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => setPaused((p) => !p)}
+              className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-white/8 text-[11px] border border-white/10"
+              title={paused ? 'Resume tour' : 'Pause tour'}
+              aria-pressed={paused}
+            >
+              {paused ? <Play className="h-3.5 w-3.5" aria-hidden /> : <Pause className="h-3.5 w-3.5" aria-hidden />}
+              {paused ? 'resume' : 'pause'}
+            </button>
             <span title="Runtime environment" className="hidden sm:inline-flex items-center gap-1 px-2 py-0.5 rounded bg-white/8 text-[11px] border border-white/10">
               <Settings2 className="h-3.5 w-3.5" aria-hidden /> env
             </span>
@@ -612,15 +772,10 @@ public class Example {
         </div>
 
         {/* body */}
-        <div className="h-[600px] md:h-[680px] lg:h-[768px] p-4" onPointerDown={() => pauseFor()}>
+        <div className="h-[660px] md:h-[740px] lg:h-[820px] p-4 min-h-0" onPointerDown={() => pauseFor()}>
           {tab === 'Summary' && (
-            <div
-              id={tabIds.Summary.panel}
-              role="tabpanel"
-              aria-labelledby={tabIds.Summary.tab}
-              className="h-full grid grid-rows-[1fr_auto] gap-4"
-            >
-              <div className="grid grid-cols-2 gap-4 text-[12.5px] leading-6">
+            <div id={tabIds.Summary.panel} role="tabpanel" aria-labelledby={tabIds.Summary.tab} className="h-full grid grid-rows-[1fr_auto] gap-4 min-h-0">
+              <div className="grid grid-cols-2 gap-4 text-[12.5px] leading-6 min-h-0">
                 <SummaryTile title="Identity & Access" items={['SSO (SAML) ✓', 'SCIM ✓', 'Roles: Operator, Approver']} />
                 <SummaryTile title="Audit" items={['OpenTelemetry: on', 'Sink: Datadog', 'Retention: 365 days']} />
                 <SummaryTile title="Data boundaries" items={['Residency: US/EU', 'BYOK / KMS: on', 'Egress: deny', 'PII: redact']} />
@@ -683,48 +838,47 @@ public class Example {
           )}
 
           {tab === 'Policy' && (
-            <div
-              id={tabIds.Policy.panel}
-              role="tabpanel"
-              aria-labelledby={tabIds.Policy.tab}
-              className="h-full grid grid-rows-[auto_1fr] gap-3"
-            >
-              <div className="flex items-center justify-between gap-3 min-w-0">
-                <div className="text-[12px] text-gray-300 truncate">
-                  Policy as code for GitOps. Updated as you adjust controls.
-                </div>
-                <div className="shrink-0">
-                  <CopyButton text={yaml} label="Copy YAML" />
+            <div id={tabIds.Policy.panel} role="tabpanel" aria-labelledby={tabIds.Policy.tab} className="h-full grid grid-rows-[auto_1fr] gap-3 min-h-0">
+              <div className="flex items-start justify-between gap-3 min-w-0">
+                <p className="text-[11.5px] sm:text-[12px] leading-snug text-gray-300">
+                  Policy‑as‑code for GitOps. Compiles to OPA/Cedar; gates promotion and writes.
+                </p>
+                <div className="flex items-center gap-2 shrink-0">
+                  <div className="flex items-center gap-1 text-[11px]">
+                    <Chip active={policyView === 'YAML'} onClick={() => setPolicyView('YAML')}>YAML</Chip>
+                    <Chip active={policyView === 'Cedar'} onClick={() => setPolicyView('Cedar')}>Cedar</Chip>
+                  </div>
+                  <CopyChip text={policyView === 'YAML' ? yaml : cedar} label={`Copy ${policyView}`} />
                 </div>
               </div>
-              <div className="rounded-xl bg-black/30 ring-1 ring-white/10 h-full overflow-hidden">
-                <pre className="px-4 py-4 text-[12.5px] leading-[1.6] font-mono whitespace-pre text-gray-200 h-full">
-                  {yaml}
+              <div className="rounded-xl bg-black/30 ring-1 ring-white/10 h-full min-h-0 overflow-hidden">
+                <pre className="px-4 py-4 text-[12.5px] leading-[1.6] font-mono whitespace-pre text-gray-200 h-full overflow-auto">
+                  {policyView === 'YAML' ? yaml : cedar}
                 </pre>
               </div>
             </div>
           )}
 
           {tab === 'SDK' && (
-            <div
-              id={tabIds.SDK.panel}
-              role="tabpanel"
-              aria-labelledby={tabIds.SDK.tab}
-              className="h-full grid grid-rows-[auto_1fr_auto_auto] gap-3"
-            >
-              <div className="flex items-center justify-between gap-3 min-w-0">
-                <div className="text-[12px] text-gray-300 truncate">
+            <div id={tabIds.SDK.panel} role="tabpanel" aria-labelledby={tabIds.SDK.tab} className="h-full grid grid-rows-[auto_1fr_auto_auto] gap-3 min-h-0">
+              <div className="flex items-start justify-between gap-3 min-w-0">
+                <p className="text-[11.5px] sm:text-[12px] leading-snug text-gray-300">
                   Drop‑in calls your teams use to move from canary → promote.
-                </div>
-                <div className="shrink-0">
-                  <CopyButton text={javaSdk} label="Copy SDK" />
+                </p>
+                <div className="flex items-center gap-2 shrink-0">
+                  <div className="flex items-center gap-1 text-[11px]">
+                    <Chip active={sdkLang === 'java'} onClick={() => setSdkLang('java')}>Java</Chip>
+                    <Chip active={sdkLang === 'python'} onClick={() => setSdkLang('python')}>Python</Chip>
+                    <Chip active={sdkLang === 'ts'} onClick={() => setSdkLang('ts')}>TypeScript</Chip>
+                  </div>
+                  <CopyChip text={sdkByLang[sdkLang]} label="Copy SDK" />
                 </div>
               </div>
 
-              {/* code surface without scrollbars */}
-              <div className="rounded-xl bg-black/30 h-[360px] md:h-[400px] p-4 overflow-hidden">
-                <pre className="text-[12.5px] leading-[1.6] font-mono whitespace-pre text-gray-200">
-                  {javaSdk}
+              {/* code surface fills available space */}
+              <div className="rounded-xl bg-black/30 p-0 h-full min-h-0 overflow-hidden">
+                <pre className="px-4 py-4 text-[12.5px] leading-[1.6] font-mono whitespace-pre text-gray-200 h-full overflow-auto">
+                  {sdkByLang[sdkLang]}
                 </pre>
               </div>
 
@@ -744,9 +898,27 @@ public class Example {
               {/* events */}
               <div className="rounded-lg bg-black/25 ring-1 ring-white/10 p-3 h-[140px] overflow-hidden">
                 <div className="text-[11px] text-gray-300 mb-1">events</div>
-                <ul className="text-[12px] leading-6 font-mono text-gray-200" role="status" aria-live="polite">
+                <ul className="text-[12px] leading-6 font-mono text-gray-200 h-full overflow-auto" role="status" aria-live="polite">
                   {events.length ? events.map((e, i) => <li key={`${e}-${i}`}>• {e}</li>) : <li className="text-gray-400">• ready.</li>}
                 </ul>
+              </div>
+            </div>
+          )}
+
+          {tab === 'Certificate' && (
+            <div id={tabIds.Certificate.panel} role="tabpanel" aria-labelledby={tabIds.Certificate.tab} className="h-full grid grid-rows-[auto_1fr] gap-3 min-h-0">
+              <div className="flex items-start justify-between gap-3 min-w-0">
+                <p className="text-[11.5px] sm:text-[12px] leading-snug text-gray-300">
+                  Signed artifact minted on promotion; verifiable before any write side‑effects.
+                </p>
+                <div className="shrink-0">
+                  <CopyChip text={certificate || '// run promote to mint a certificate'} label="Copy certificate" />
+                </div>
+              </div>
+              <div className="rounded-xl bg-black/30 ring-1 ring-white/10 h-full min-h-0 overflow-hidden">
+                <pre className="px-4 py-4 text-[12.5px] leading-[1.6] font-mono whitespace-pre text-gray-200 h-full overflow-auto">
+                  {certificate || '// run promote to mint a certificate'}
+                </pre>
               </div>
             </div>
           )}
@@ -787,11 +959,46 @@ function Tab({
     >
       {label}
       <span
-        className={`absolute left-1/2 -translate-x-1/2 -bottom-2 h-0.5 w-10 rounded ${
-          active ? 'bg-orange-400' : 'bg-transparent'
-        }`}
+        className={`absolute left-1/2 -translate-x-1/2 -bottom-2 h-0.5 w-10 rounded ${active ? 'bg-orange-400' : 'bg-transparent'}`}
         aria-hidden
       />
+    </button>
+  );
+}
+
+function Chip({ active, children, onClick }: { active: boolean; children: React.ReactNode; onClick: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`px-2 py-0.5 rounded ${active ? 'bg-orange-400 text-gray-900' : 'bg-white/10 text-gray-200 hover:bg-white/20'} h-6 leading-5`}
+      aria-pressed={active}
+    >
+      {children}
+    </button>
+  );
+}
+
+function CopyChip({ text, label }: { text: string; label: string }) {
+  const [copied, setCopied] = useState(false);
+  return (
+    <button
+      type="button"
+      onClick={async () => {
+        try {
+          await navigator.clipboard.writeText(text);
+          setCopied(true);
+          setTimeout(() => setCopied(false), 1200);
+        } catch {
+          /* noop */
+        }
+      }}
+      className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-white/10 hover:bg-white/20 text-[11px] h-6 leading-5"
+      title={label}
+      aria-live="polite"
+    >
+      <Copy className="h-3.5 w-3.5" aria-hidden />
+      {copied ? 'Copied' : label}
     </button>
   );
 }
@@ -811,30 +1018,6 @@ function SummaryTile({ title, items }: { title: string; items: string[] }) {
 
 function Pill({ children }: { children: React.ReactNode }) {
   return <span className="px-2 py-1 rounded bg-orange-200/90 text-gray-900 text-[11px] font-semibold shadow-sm">{children}</span>;
-}
-
-function CopyButton({ text, label }: { text: string; label: string }) {
-  const [copied, setCopied] = useState(false);
-  return (
-    <button
-      type="button"
-      onClick={async () => {
-        try {
-          await navigator.clipboard.writeText(text);
-          setCopied(true);
-          setTimeout(() => setCopied(false), 1200);
-        } catch {
-          /* noop */
-        }
-      }}
-      className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-white/10 hover:bg-white/20 text-[11px] font-medium"
-      title={label}
-      aria-live="polite"
-    >
-      <Copy className="h-3.5 w-3.5" aria-hidden />
-      {copied ? 'Copied' : label}
-    </button>
-  );
 }
 
 function Feature({ icon, title, desc }: { icon: React.ReactNode; title: string; desc: string }) {
