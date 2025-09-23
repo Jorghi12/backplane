@@ -1,4 +1,3 @@
-// app/docs/quickstart/page.tsx
 import {
   CheckCircle2,
   BookOpen,
@@ -44,8 +43,9 @@ export default function Quickstart() {
         </ul>
       </section>
 
-      {/* Step 1 */}
+      {/* Step 1 → 7 */}
       <ol className="space-y-8">
+        {/* 1) Deploy gateway */}
         <li className="rounded-xl bg-white border border-gray-200 p-6">
           <div className="flex items-center gap-2 text-gray-900 font-medium">
             <Cloud className="h-5 w-5 text-orange-600" />
@@ -70,7 +70,7 @@ module "trustplane" {
           </pre>
         </li>
 
-        {/* Step 2 */}
+        {/* 2) SSO + SCIM */}
         <li className="rounded-xl bg-white border border-gray-200 p-6">
           <div className="flex items-center gap-2 text-gray-900 font-medium">
             <KeyRound className="h-5 w-5 text-orange-600" />
@@ -89,7 +89,7 @@ module "trustplane" {
           </pre>
         </li>
 
-        {/* Step 3 */}
+        {/* 3) Connectors */}
         <li className="rounded-xl bg-white border border-gray-200 p-6">
           <div className="flex items-center gap-2 text-gray-900 font-medium">
             <PlugZap className="h-5 w-5 text-orange-600" />
@@ -110,8 +110,8 @@ slack:
           </pre>
         </li>
 
-        {/* Step 4 */}
-        <li className="rounded-xl bg-white border border-gray-200 p-6">
+        {/* 4) SLO + policy */}
+        <li className="rounded-xl bg-white border border-gray-200 p-6" id="policy">
           <div className="flex items-center gap-2 text-gray-900 font-medium">
             <Shield className="h-5 w-5 text-orange-600" />
             4) Declare SLOs & policy as code
@@ -131,7 +131,7 @@ connectors: { snowflake: read_first, servicenow: write_gated }`}
           </pre>
         </li>
 
-        {/* Step 5 */}
+        {/* 5) First governed call */}
         <li className="rounded-xl bg-white border border-gray-200 p-6">
           <div className="flex items-center gap-2 text-gray-900 font-medium">
             <GitBranch className="h-5 w-5 text-orange-600" />
@@ -156,7 +156,7 @@ export async function POST() {
           </pre>
         </li>
 
-        {/* Step 6 */}
+        {/* 6) Observe */}
         <li className="rounded-xl bg-white border border-gray-200 p-6">
           <div className="flex items-center gap-2 text-gray-900 font-medium">
             <Gauge className="h-5 w-5 text-orange-600" />
@@ -173,7 +173,7 @@ export async function POST() {
           </ul>
         </li>
 
-        {/* Step 7 */}
+        {/* 7) Promote + certificate */}
         <li className="rounded-xl bg-white border border-gray-200 p-6">
           <div className="flex items-center gap-2 text-gray-900 font-medium">
             <FileCheck2 className="h-5 w-5 text-orange-600" />
