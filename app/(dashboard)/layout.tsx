@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useState, Suspense } from 'react';
+import { useEffect, useId, useState, Suspense } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import useSWR, { mutate } from 'swr';
 
@@ -38,7 +38,7 @@ function UserMenu() {
     router.push('/');
   }
 
-  // Signed-out state: keep it simple—Sign in + primary CTA
+  // Signed-out state
   if (!user) {
     return (
       <div className="flex items-center gap-3">
@@ -68,12 +68,17 @@ function UserMenu() {
 
   return (
     <DropdownMenu open={isMenuOpen} onOpenChange={setIsMenuOpen}>
-      <DropdownMenuTrigger aria-label="Open user menu">
-        <Avatar className="cursor-pointer size-9">
-          {/* Add src if your User has an image field */}
-          <AvatarImage alt={user.name || user.email || 'User'} />
-          <AvatarFallback className="text-xs">{initials}</AvatarFallback>
-        </Avatar>
+      <DropdownMenuTrigger asChild>
+        <button
+          type="button"
+          aria-label="Open user menu"
+          className="rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-orange-500"
+        >
+          <Avatar className="size-9">
+            <AvatarImage alt={user.name || user.email || 'User'} />
+            <AvatarFallback className="text-xs">{initials}</AvatarFallback>
+          </Avatar>
+        </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="flex flex-col gap-1">
         <DropdownMenuItem className="cursor-pointer">
@@ -115,8 +120,9 @@ function NavLink({
     <Link
       href={href}
       onClick={onClick}
+      aria-current={active ? 'page' : undefined}
       className={[
-        'text-sm font-medium transition-colors',
+        'text-sm font-medium transition-colors rounded focus:outline-none focus-visible:ring-2 focus-visible:ring-orange-500',
         active
           ? 'text-gray-900'
           : 'text-gray-700 hover:text-gray-900',
@@ -129,6 +135,11 @@ function NavLink({
 
 function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const navId = useId();
+
+  // Close mobile sheet on route change for safety
+  const pathname = usePathname();
+  useEffect(() => setMobileOpen(false), [pathname]);
 
   const primaryLinks = [
     { href: '/docs/quickstart', label: 'Docs' },
@@ -176,8 +187,10 @@ function Header() {
           <button
             type="button"
             aria-label="Toggle menu"
+            aria-expanded={mobileOpen}
+            aria-controls={navId}
             onClick={() => setMobileOpen((o) => !o)}
-            className="inline-flex items-center justify-center rounded-md border border-gray-200 p-2 text-gray-700 hover:bg-gray-50"
+            className="inline-flex items-center justify-center rounded-md border border-gray-200 p-2 text-gray-700 hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-orange-500"
           >
             {mobileOpen ? (
               <X className="h-5 w-5" />
@@ -189,24 +202,29 @@ function Header() {
       </div>
 
       {/* Mobile sheet */}
-      {mobileOpen && (
-        <div className="md:hidden border-t border-gray-200 bg-white">
-          <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 grid gap-3" aria-label="Mobile">
-            {primaryLinks.map((l) => (
-              <NavLink
-                key={l.href}
-                href={l.href}
-                onClick={() => setMobileOpen(false)}
-              >
-                {l.label}
-              </NavLink>
-            ))}
-          </nav>
-        </div>
-      )}
+      <div
+        id={navId}
+        className={[
+          'md:hidden border-t border-gray-200 bg-white transition-[max-height] overflow-hidden',
+          mobileOpen ? 'max-h-96' : 'max-h-0',
+        ].join(' ')}
+      >
+        <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 grid gap-3" aria-label="Mobile">
+          {primaryLinks.map((l) => (
+            <NavLink
+              key={l.href}
+              href={l.href}
+              onClick={() => setMobileOpen(false)}
+            >
+              {l.label}
+            </NavLink>
+          ))}
+        </nav>
+      </div>
     </header>
   );
 }
+
 /* ----------------------------- Footer ------------------------------ */
 
 function Footer() {
