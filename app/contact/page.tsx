@@ -1,33 +1,31 @@
 // app/contact/page.tsx
 import { ContactForm } from './contact_form';
-import { Shield, FileText, Cloud as CloudIcon } from 'lucide-react';
-import { getUser } from '@/lib/db/queries';
+import { Cloud, FileText, Shield } from 'lucide-react';
 
 export const metadata = { title: 'Contact — TrustPlane' };
 
-export default async function ContactPage({
-  searchParams,
-}: {
-  searchParams?: Record<string, string | string[] | undefined>;
-}) {
-  // Prefill from signed-in user if available
-  const user = await getUser();
+type SearchParams = {
+  plan?: string;
+  topic?: 'demo' | 'security' | 'pricing' | 'partnership';
+  name?: string;
+  email?: string;
+  company?: string;
+  role?: string;
+  cloud?: string;
+  [k: string]: string | string[] | undefined;
+};
 
-  // Map query params -> default topic
-  // /contact?topic=security (from Security page) /contact?plan=enterprise (from Pricing)
-  const topicParam = (searchParams?.topic as string) || '';
-  const planParam = (searchParams?.plan as string) || '';
-  const defaultTopic =
-    topicParam === 'security' ? 'security' :
-    topicParam === 'pricing' ? 'pricing' :
-    planParam === 'enterprise' ? 'pricing' :
-    'demo';
+export default function ContactPage({ searchParams }: { searchParams: SearchParams }) {
+  const plan = (searchParams.plan ?? '') as string;
+  const topic = (searchParams.topic ?? 'demo') as 'demo' | 'security' | 'pricing' | 'partnership';
 
-  // Capture common UTM params if present
+  // collect utm_* passthroughs
   const utm: Record<string, string> = {};
-  ['source', 'medium', 'campaign', 'term', 'content'].forEach((k) => {
-    const v = searchParams?.[`utm_${k}`] as string | undefined;
-    if (v) utm[k] = v;
+  Object.keys(searchParams).forEach((k) => {
+    if (k.startsWith('utm_')) {
+      const v = searchParams[k];
+      if (typeof v === 'string') utm[k.slice(4)] = v;
+    }
   });
 
   return (
@@ -40,7 +38,8 @@ export default async function ContactPage({
           Request a demo, security brief, or pricing
         </h1>
         <p className="mt-3 text-gray-600">
-          Share your workloads and success criteria. We’ll respond within one business day with the fastest path to a governed canary and a certified rollout.
+          Share your workloads and success criteria. We’ll respond within one business day with the fastest path
+          to a governed canary and a certified rollout.
         </p>
       </header>
 
@@ -48,24 +47,21 @@ export default async function ContactPage({
       <div className="rounded-xl bg-white border border-gray-200 p-4 mb-6 grid gap-3 md:grid-cols-3">
         <Signal icon={<Shield className="h-4 w-4" />} title="Runs in your VPC" />
         <Signal icon={<FileText className="h-4 w-4" />} title="Security pack on request" />
-        <Signal icon={<CloudIcon className="h-4 w-4" />} title="AWS · GCP · Azure" />
+        <Signal icon={<Cloud className="h-4 w-4" />} title="AWS · GCP · Azure" />
       </div>
 
       <ContactForm
-        defaultName={user?.name || ''}
-        defaultEmail={user?.email || ''}
-        //defaultCompany={user?.company || ''}
-        defaultRole={user?.role || ''}
-        defaultCloud=""
-        defaultTopic={defaultTopic as any}
-        hiddenPlan={planParam}
+        defaultName={(searchParams.name as string) || ''}
+        defaultEmail={(searchParams.email as string) || ''}
+        defaultCompany={(searchParams.company as string) || ''}
+        defaultRole={(searchParams.role as string) || ''}
+        defaultCloud={(searchParams.cloud as string) || ''}
+        defaultTopic={topic}
+        hiddenPlan={plan}
         utm={utm}
       />
 
       <p className="mt-6 text-xs text-gray-500">By submitting, you agree to our Privacy and Terms.</p>
-      <div className="mt-6 text-sm text-gray-600">
-        Prefer email? Write to <a className="underline hover:text-gray-900" href="mailto:hello@trustplane.example">hello@trustplane.example</a>.
-      </div>
     </main>
   );
 }

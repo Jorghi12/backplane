@@ -4,6 +4,9 @@ import { Manrope } from 'next/font/google';
 import { getUser, getTeamForUser } from '@/lib/db/queries';
 import { SWRConfig } from 'swr';
 
+import SiteHeader from '@/components/ui/site-header';
+import SiteFooter from '@/components/ui/site-footer';
+
 /**
  * Site constants
  */
@@ -95,36 +98,20 @@ export const viewport: Viewport = {
 
 const manrope = Manrope({ subsets: ['latin'], display: 'swap' });
 
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html
-      lang="en"
-      className={`bg-white text-black ${manrope.className}`}
-      suppressHydrationWarning
-    >
+    <html lang="en" className="bg-white text-black" suppressHydrationWarning>
       <body className="min-h-[100dvh] bg-gray-50 text-gray-900 antialiased scroll-smooth">
-        {/* Accessible skip link for keyboard users */}
-        <a
-          href="#content"
-          className="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:top-3 focus:left-3 rounded-md bg-white px-3 py-2 text-sm font-medium text-gray-900 shadow ring-2 ring-orange-500"
-        >
+        <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:top-3 focus:left-3 rounded-md bg-white px-3 py-2 text-sm font-medium text-gray-900 shadow ring-2 ring-orange-500">
           Skip to content
         </a>
 
-        <SWRConfig
-          value={{
-            // Keep your existing pattern: provide promises as fallback
-            // so components that read them can suspend intentionally.
-            // (Matches your previous file’s comment/approach.)
-            fallback: {
-              '/api/user': getUser(),
-              '/api/team': getTeamForUser()
-            }
-          }}
-        >
-          {/* Focus target for the skip link */}
-          <div id="content" tabIndex={-1}>
-            {children}
+        <SWRConfig value={{ fallback: { '/api/user': getUser(), '/api/team': getTeamForUser() } }}>
+          <div className="flex min-h-screen flex-col">
+            <SiteHeader />
+            <main id="main">{children}</main>
+            <SiteFooter />
           </div>
         </SWRConfig>
       </body>

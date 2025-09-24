@@ -4,7 +4,7 @@
 import { useActionState } from 'react';
 import { SubmitButton } from '../(dashboard)/pricing/submit-button';
 import { Building2, Mail, User, Cloud, MessageSquareText } from 'lucide-react';
-import type { Result } from './actions';
+import { contactAction, type Result } from './actions';
 
 export function ContactForm({
   defaultName = '',
@@ -25,9 +25,6 @@ export function ContactForm({
   hiddenPlan?: string;
   utm?: Record<string, string>;
 }) {
-  // Import on demand to keep module graph small
-  const { contactAction } = require('./actions') as typeof import('./actions');
-
   const initial: Result = { ok: false, error: null, fieldErrors: {} };
   const [state, formAction] = useActionState<Result, FormData>(contactAction, initial);
 
@@ -37,12 +34,21 @@ export function ContactForm({
       <input type="hidden" name="form_started_at" value={String(Date.now())} />
       <input type="text" name="website" tabIndex={-1} autoComplete="off" className="hidden" aria-hidden="true" />
       {hiddenPlan ? <input type="hidden" name="plan" value={hiddenPlan} /> : null}
-      {Object.entries(utm).map(([k, v]) => <input key={k} type="hidden" name={`utm_${k}`} value={v} />)}
+      {Object.entries(utm).map(([k, v]) => (
+        <input key={k} type="hidden" name={`utm_${k}`} value={v} />
+      ))}
 
-      {state.ok ? (
+      {/* Success / error banners */}
+      {state.ok && state.success ? (
         <div className="rounded-lg border border-green-200 bg-green-50 p-4 text-sm text-gray-800">
-          <div className="font-medium">Thanks — request received.</div>
+          <div className="font-medium">{state.success}</div>
           <div className="mt-1">We’ll reply within one business day with the fastest path to a governed canary and a certified rollout.</div>
+        </div>
+      ) : null}
+
+      {!state.ok && state.error ? (
+        <div className="rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+          {state.error}
         </div>
       ) : null}
 
@@ -131,10 +137,6 @@ export function ContactForm({
         {state.fieldErrors?.message ? <p className="mt-1 text-xs text-red-600">{state.fieldErrors.message}</p> : null}
         <p className="mt-1 text-xs text-gray-500">We respond within one business day. Procurement support (MSA, DPA, marketplace) available.</p>
       </div>
-
-      {state.error ? (
-        <div className="rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">{state.error}</div>
-      ) : null}
 
       <SubmitButton label="Send request" pendingLabel="Sending…" variant="default" />
     </form>
