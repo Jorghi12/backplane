@@ -130,10 +130,21 @@ export async function handleSubscriptionChange(
 
   if (status === 'active' || status === 'trialing') {
     const plan = subscription.items.data[0]?.plan;
+    let productId: string | null = null;
+    let planName: string | null = null;
+    if (plan?.product) {
+      productId = typeof plan.product === 'string' ? plan.product : plan.product.id;
+      try {
+        const product = await stripe.products.retrieve(productId);
+        planName = product.name ?? null;
+      } catch {
+        planName = null;
+      }
+    }
     await updateTeamSubscription(team.id, {
       stripeSubscriptionId: subscriptionId,
-      stripeProductId: plan?.product as string,
-      planName: (plan?.product as Stripe.Product).name,
+      stripeProductId: productId,
+      planName,
       subscriptionStatus: status
     });
   } else if (status === 'canceled' || status === 'unpaid') {

@@ -542,3 +542,18 @@ function FAQ() {
     </section>
   );
 }
+
+
+function UsageMeter() {
+  return (
+    <section className="mt-16">
+      <h3 className="text-lg font-semibold text-gray-900">Usage metering</h3>
+      <div className="mt-3 rounded-xl border border-gray-200 bg-white/60 p-6">
+        <p className="text-sm text-gray-700">
+          All plans meter usage by <span className="font-medium">approved actions</span> (i.e., Action Certificates minted on promotion/writes).
+          Seats are for governance users; viewers can be unlimited. Contact sales for current rates or percent‑of‑spend options.
+        </p>
+      </div>
+    </section>
+  );
+}

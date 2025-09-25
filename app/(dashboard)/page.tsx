@@ -257,12 +257,27 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* INVESTOR KPIs */}
+      <section className="py-14 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h3 className="text-2xl font-semibold text-gray-900">KPIs that matter</h3>
+          <div className="mt-6 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <Stat icon={<CheckCircle2 className="h-5 w-5" aria-hidden />} value="1,240/day" label="Approved actions" />
+            <Stat icon={<Shield className="h-5 w-5" aria-hidden />} value="82%" label="Writes governed" />
+            <Stat icon={<DollarSign className="h-5 w-5" aria-hidden />} value="$0.12" label="Cost per approved action" />
+            <Stat icon={<Gauge className="h-5 w-5" aria-hidden />} value="99.9%" label="SLO attainment" />
+            <Stat icon={<LineChart className="h-5 w-5" aria-hidden />} value="On budget" label="Budget adherence" />
+            <Stat icon={<Server className="h-5 w-5" aria-hidden />} value="100%" label="Audit coverage" />
+          </div>
+        </div>
+      </section>
+
       {/* PILOT KITS */}
       <section className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h3 className="text-2xl font-semibold text-gray-900">Start with a critical workflow</h3>
           <p className="mt-2 text-gray-600 max-w-3xl">
-            Opinionated Pilot Kits include pre‑wired connectors, evals, and guardrails—so you can launch <span className="font-medium">governed canaries</span>
+            Opinionated Pilot Kits include pre‑wired connectors, evals, and guardrails—so you can launch <span className="font-medium">governed canaries </span>
             in days and scale wins across LoBs.
           </p>
           <div className="mt-6 grid md:grid-cols-2 lg:grid-cols-3 gap-6">

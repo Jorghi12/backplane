@@ -7,7 +7,7 @@ import useSWR, { mutate } from 'swr';
 
 import { Button } from '@/components/ui/button';
 import {
-  CircleIcon,
+  Circle,
   Home,
   LogOut,
   Menu,
@@ -87,14 +87,16 @@ function UserMenu() {
             <span>Dashboard</span>
           </Link>
         </DropdownMenuItem>
-        <form action={handleSignOut} className="w-full">
-          <button type="submit" className="flex w-full">
-            <DropdownMenuItem className="w-full flex-1 cursor-pointer">
-              <LogOut className="mr-2 h-4 w-4" />
-              <span>Sign out</span>
-            </DropdownMenuItem>
-          </button>
-        </form>
+                <DropdownMenuItem
+                  className="w-full flex-1 cursor-pointer"
+                  onSelect={(e) => {
+                    e.preventDefault(); // keep menu from closing before we run async
+                    handleSignOut();
+                  }}
+                >
+                  <LogOut className="mr-2 h-4 w-4" />
+                  <span>Sign out</span>
+                </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
@@ -145,6 +147,7 @@ function Header() {
     { href: '/docs/quickstart', label: 'Docs' },
     { href: '/security', label: 'Security' },
     { href: '/pricing', label: 'Pricing' },
+    { href: '/pricing/unit-economics', label: 'Unit economics' },
     { href: '/contact', label: 'Contact' },
   ];
 
@@ -160,7 +163,7 @@ function Header() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         {/* Brand */}
         <Link href="/" className="flex items-center">
-          <CircleIcon aria-hidden className="h-6 w-6 text-orange-500" />
+          <Circle aria-hidden className="h-6 w-6 text-orange-500" />
           <span className="ml-2 text-xl font-semibold text-gray-900">
             TrustPlane
           </span>

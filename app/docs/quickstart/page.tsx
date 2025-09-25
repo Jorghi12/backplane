@@ -141,7 +141,7 @@ connectors: { snowflake: read_first, servicenow: write_gated }`}
           <pre className="mt-3 rounded-lg bg-gray-900 text-gray-100 p-4 text-sm overflow-x-auto">
 {`// app/api/example/route.ts
 import { NextResponse } from 'next/server';
-import { createClient } from '@TrustPlane/sdk';
+import { createClient } from '@trustplane/sdk';
 
 const tp = createClient({ sloManifestPath: 'TrustPlane.slo.yaml' });
 
