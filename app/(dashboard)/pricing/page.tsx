@@ -108,15 +108,15 @@ export default async function PricingPage() {
           monthlyPriceId={baseMonthly?.id}
           yearlyPriceId={baseYearly?.id}
           trialDays={baseTrial}
-          intervalLabel="per builder / month"
+          intervalLabel="per 10k Verified Actions (metered)"
           highlight={false}
           outcome={{
             automations: '1 governed automation',
             actions: 'Includes 25k Verified Actions / mo',
-            overage: 'Overage available on Enterprise contracts',
+            overage: 'Prepaid blocks & volume tiers available',
           }}
           features={[
-            'Unlimited viewers & approvers',
+            'No seat charges — unlimited users',
             'Read‑first connectors (Snowflake, Databricks, ServiceNow, Slack/Teams) *',
             'Policy‑as‑code gates; dry‑run + rollback',
             'Email support',
@@ -134,12 +134,12 @@ export default async function PricingPage() {
           monthlyPriceId={plusMonthly?.id}
           yearlyPriceId={plusYearly?.id}
           trialDays={plusTrial}
-          intervalLabel="per builder / month"
+          intervalLabel="per 10k Verified Actions (metered)"
           highlight
           outcome={{
             automations: 'Up to 5 governed automations',
             actions: 'Includes 100k Verified Actions / mo',
-            overage: 'Volume tiers via contract',
+            overage: 'Prepaid blocks & volume tiers available',
           }}
           features={[
             'Everything in Build',
@@ -507,16 +507,14 @@ function FAQ() {
         <details className="rounded-lg border border-gray-200 bg-white/60 p-4">
           <summary className="cursor-pointer font-medium text-gray-900">Who pays for access?</summary>
           <p className="mt-2 text-sm text-gray-700">
-            Approvers &amp; viewers are free. Only <span className="font-medium">builders/operators</span> require paid seats
-            (the people wiring connectors, policies, and promotions). This keeps adoption friction low while aligning value.
+            There are <span className="font-medium">no seat charges</span>. Roles (builders/operators, approvers, viewers) are included. Billing is purely usage‑based: <span className="font-medium">Verified Actions</span> (certificate‑verified writes) with prepaid blocks and volume tiers.
           </p>
         </details>
 
         <details className="rounded-lg border border-gray-200 bg-white/60 p-4">
           <summary className="cursor-pointer font-medium text-gray-900">How does usage factor in?</summary>
           <p className="mt-2 text-sm text-gray-700">
-            Each plan includes a monthly pool of <span className="font-medium">Verified Actions</span>. Enterprise contracts add volume tiers
-            or credit packs. Reads, traces, and dry‑runs are not metered.
+            Usage is metered by <span className="font-medium">Verified Actions</span>—each certificate‑verified write routed via the control plane. Buy prepaid blocks (e.g., <span className="font-medium">10k actions</span>) with volume discounts; reads, traces, and dry‑runs are not metered. Enterprise may alternatively peg usage to a <span className="font-medium">% of model spend</span> when inference is routed through TrustPlane.
           </p>
         </details>
 
